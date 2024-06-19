@@ -109,16 +109,217 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
-
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        int size = board.size();
+        board.setViewingPerspective(side);
+
+        boolean[] changeds = new boolean[4];
+
+        for (int col = 0; col < size; col ++){
+            changeds[col] = tilt_single_column_up(col);
+        }
+
+        if(changeds[0] | changeds[1] | changeds[2] | changeds[3]) {
+            changed = true;
+        }
+
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    /** deal with a single column
+     * @param col column
+     * @return changed
+     */
+
+    public boolean tilt_single_column_up(int col){
+        boolean changed;
+        changed = false;
+        if(not_null_tilt_numbers_column_up(col) == 0){
+            return changed;
+        }
+
+        if(not_null_tilt_numbers_column_up(col) == 1){
+            int[] rowIndex = not_null_tilt_rowIndex_column_up(col);
+            if(rowIndex[0] == 3){
+                return changed;
+            }
+            changed = true;
+            Tile t = board.tile(col, rowIndex[0]);
+            board.move(col, 3, t);
+        }
+
+        if(not_null_tilt_numbers_column_up(col) == 2){
+            int[] rowIndex = not_null_tilt_rowIndex_column_up(col);
+            // if the two value equal, then add score and move
+            if(board.tile(col, rowIndex[0]).value() == board.tile(col, rowIndex[1]).value()){
+                score += 2 * board.tile(col, rowIndex[0]).value();
+
+                Tile t0 = board.tile(col, rowIndex[0]);
+                board.move(col, 3, t0);
+                Tile t1 = board.tile(col, rowIndex[1]);
+                board.move(col, 3, t1);
+                changed = true;
+                return changed;
+            }
+
+            // the case that nothing changes
+            if(rowIndex[0] == 2 & rowIndex[1] == 3){
+                return changed;
+            }
+
+            // the case that score doesn't change but board changes
+            Tile t1 = board.tile(col, rowIndex[1]);
+            board.move(col, 3, t1);
+            Tile t0 = board.tile(col, rowIndex[0]);
+            board.move(col, 2, t0);
+            changed = true;
+        }
+
+        if(not_null_tilt_numbers_column_up(col) == 3){
+            int[] rowIndex = not_null_tilt_rowIndex_column_up(col);
+            //two tiles up equals
+            if(board.tile(col, rowIndex[1]).value() == board.tile(col, rowIndex[2]).value()){
+                score += 2 * board.tile(col, rowIndex[1]).value();
+                changed = true;
+
+                Tile t2 = board.tile(col, rowIndex[2]);
+                board.move(col, 3, t2);
+                Tile t1 = board.tile(col, rowIndex[1]);
+                board.move(col, 3, t1);
+                Tile t0 = board.tile(col, rowIndex[0]);
+                board.move(col, 2, t0);
+            } else if (board.tile(col, rowIndex[0]).value() == board.tile(col, rowIndex[1]).value()) {
+                score += 2 * board.tile(col, rowIndex[0]).value();
+                changed = true;
+
+                Tile t2 = board.tile(col, rowIndex[2]);
+                board.move(col, 3, t2);
+                Tile t1 = board.tile(col, rowIndex[1]);
+                board.move(col, 2, t1);
+                Tile t0 = board.tile(col, rowIndex[0]);
+                board.move(col, 2, t0);
+                }
+
+
+            // no tiles adjacent equals and NO need to move
+            if(board.tile(col, 0) == null){
+                return changed;
+            }
+
+            // no tiles adjacent and NEED to move
+            changed = true;
+
+            Tile t2 = board.tile(col, rowIndex[2]);
+            board.move(col, 3, t2);
+            Tile t1 = board.tile(col, rowIndex[1]);
+            board.move(col, 2, t1);
+            Tile t0 = board.tile(col, rowIndex[0]);
+            board.move(col, 1, t0);
+        }
+
+        if(not_null_tilt_numbers_column_up(col) == 4){
+            //top two tiles equal
+            if(board.tile(col, 3).value() == board.tile(col, 2).value()){
+                score += 2 * board.tile(col, 3).value();
+                changed = true;
+
+                // two below also equal
+                if(board.tile(col, 1).value() == board.tile(col, 0).value()){
+                    score += 2 * board.tile(col, 1).value();
+                    Tile t2 = board.tile(col, 2);
+                    board.move(col, 3, t2);
+
+                    Tile t1 = board.tile(col, 1);
+                    board.move(col, 2, t1);
+
+                    Tile t0 = board.tile(col, 0);
+                    board.move(col, 2, t0);
+                } else {
+                    Tile t2 = board.tile(col, 2);
+                    board.move(col, 3, t2);
+
+                    Tile t1 = board.tile(col, 1);
+                    board.move(col, 2, t1);
+
+                    Tile t0 = board.tile(col, 0);
+                    board.move(col, 1, t0);
+                }
+
+            } else if (board.tile(col, 2).value() == board.tile(col, 1).value()) {
+                // top two tiles do not equal, middle two equal
+                score += 2 * board.tile(col, 2).value();
+                changed = true;
+
+                Tile t1 = board.tile(col, 1);
+                board.move(col, 2, t1);
+
+                Tile t0 = board.tile(col, 0);
+                board.move(col, 1, t0);
+
+            } else if (board.tile(col, 0).value() == board.tile(col, 1).value()) {
+                // only two below equal
+                score += 2 * board.tile(col, 0).value();
+                changed = true;
+
+                Tile t0 = board.tile(col, 0);
+                board.move(col, 1, t0);
+            }
+
+            // then none tiles adjacent equal
+        }
+
+
+        return changed;
+    }
+
+    /**
+     * return the number of not null tilt in a column
+     */
+
+
+    public int not_null_tilt_numbers_column_up(int col){
+        int size = board.size();
+        int nullNumber = 0;
+        for (int r=0; r<size; r++){
+            if(board.tile(col, r) == null){
+                nullNumber += 1;
+            }
+        }
+        return 4 - nullNumber;
+    }
+
+
+    /**
+     * return the row index where the tilt is not null in a column
+     * There should be at least one tilt that is not null in that col
+     */
+    public int[] not_null_tilt_rowIndex_column_up(int col){
+        int not_null_number = not_null_tilt_numbers_column_up(col);
+        int[] not_null_tilt_rowIndex = new int[not_null_number];
+
+        int row = 0;
+        for (int i = 0; i < not_null_number; i++) {
+            if(board.tile(col, row) != null){
+                not_null_tilt_rowIndex[i] = row;
+                row += 1;
+            } else{
+                while (board.tile(col, row) == null) {
+                    row += 1;
+                }
+                not_null_tilt_rowIndex[i] = row;
+                row += 1;
+
+            }
+        }
+        return not_null_tilt_rowIndex;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -138,6 +339,14 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        int size = b.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if(b.tile(i, j) == null){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +357,17 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int size = b.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if(b.tile(i, j) == null){
+                    continue;
+                }
+                if(b.tile(i, j).value() == MAX_PIECE){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,6 +379,26 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b)){
+            return true;
+        }
+        int size= b.size();
+        // horizon adjacent
+        for (int i = 0; i < size-1; i++) {
+            for (int j = 0; j < size; j++) {
+                if(b.tile(i, j).value() == b.tile(i + 1, j).value()){
+                    return true;
+                }
+            }
+        }
+        // vertical adjacent
+        for (int j = 0; j < size-1; j++){
+            for (int i = 0; i < size; i++){
+                if(b.tile(i, j).value() == b.tile(i, j + 1).value()){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
