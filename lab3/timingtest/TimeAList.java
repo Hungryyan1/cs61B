@@ -17,11 +17,36 @@ public class TimeAList {
         }
     }
 
+
     public static void main(String[] args) {
         timeAListConstruction();
     }
 
     public static void timeAListConstruction() {
         // TODO: YOUR CODE HERE
+        AList<Integer> Ns = new AList();
+        int start = 1000;
+        Ns.addLast(start);
+        for (int i = 0; i < 7; i++) {
+            Ns.addLast(start * 2);
+            start *= 2;
+        }
+
+        AList<Double> times = new AList();
+
+
+        for (int i = 0; i < Ns.size(); i++) {
+            Stopwatch timer = new Stopwatch();
+            AList<Integer> tmp = new AList();
+            for (int j = 0; j < Ns.get(i); j++) {
+                tmp.addLast(j);
+            }
+            double timeInSeconds = timer.elapsedTime();
+            times.addLast(timeInSeconds);
+        }
+
+        printTimingTable(Ns, times, Ns);
+
+
     }
 }
