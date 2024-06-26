@@ -1,6 +1,8 @@
 package deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class ArrayDeque<Item> {
+public class ArrayDeque<Item> implements Iterable<Item> {
     private int size;
     private Item[] items;
     private int nextfirst;
@@ -67,16 +69,17 @@ public class ArrayDeque<Item> {
 
     private Item[] sortArrayFromFirstToLast() {
         Item[] sortItems = (Item[]) new Object[size];
-        int first = (nextfirst + 1) % items.length;
-        if (first >= nextlast) {
+        int first = (nextfirst + 1) % items.length;  // first item index
+        int last = (nextlast + items.length - 1 ) % items.length; // last item index
+        if (first >= last) {
             for (int i = first; i < items.length; i++) {
                 sortItems[i - first] = items[i];
             }
-            for (int i = 0; i < first; i++) {
+            for (int i = 0; i <= last; i++) {
                 sortItems[items.length - first + i] = items[i];
             }
         } else {
-            for (int i = first; i < nextlast; i++) {
+            for (int i = first; i <= last; i++) {
                 sortItems[i - first] = items[i];
             }
         }
@@ -97,11 +100,10 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
+        if (items.length >= 16 && (size / (items.length * 1.0) < 0.25)) {
+            resize(items.length / 2);
+        }
         size -= 1;
-        //if (items.length >= 16 && (size / (items.length * 1.0) < 0.25)) {
-        //    resize(items.length / 2);
-        //}
-
         int first = (nextfirst + 1) % items.length;
         Item item = items[first];
         items[first] = null;
@@ -116,10 +118,10 @@ public class ArrayDeque<Item> {
         // before performing a remove operation that will bring
         // the number of elements in the array under 25% the
         // length of the array, you should resize the size of the array down
+        if (items.length >= 16 && (size / (items.length * 1.0) < 0.25)) {
+            resize(items.length / 2);
+        }
         size -= 1;
-        //if (items.length >= 16 && (size / (items.length * 1.0) < 0.25)) {
-        //    resize(items.length / 2);
-        //}
         int last = (nextlast + items.length - 1 ) % items.length;
         Item item = items[last];
         items[last] = null;
@@ -153,5 +155,34 @@ public class ArrayDeque<Item> {
             }
         }
         return equals;
+    }
+
+    /* Throw "The deque is empty if size is 0" */
+    public Iterator<Item> iterator() {
+        if (size == 0) {
+            throw new NoSuchElementException("The deque is empty");
+        }
+        return new ArrayDequeIterator();
+    }
+
+    /* Iterate the Deque according to sequence */
+    private class ArrayDequeIterator implements Iterator<Item> {
+        private int index;
+        private Item[] itemsSort;
+
+        public ArrayDequeIterator() {
+            index = 0;
+            itemsSort = sortArrayFromFirstToLast();
+        }
+
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        public Item next() {
+            Item item = itemsSort[index];
+            index += 1;
+            return item;
+        }
     }
 }

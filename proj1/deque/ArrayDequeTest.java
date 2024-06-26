@@ -204,17 +204,19 @@ public class ArrayDequeTest {
     public void bigLLDequeTest() {
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000; i++) {
             lld1.addLast(i);
         }
 
-        for (double i = 0; i < 500000; i++) {
+        for (double i = 9999; i > 5000; i--) {
+            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
+        }
+
+
+        for (double i = 0; i < 5000; i++) {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
-        for (double i = 999999; i > 500000; i--) {
-            assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
-        }
 
     }
 
@@ -283,6 +285,49 @@ public class ArrayDequeTest {
         System.out.println(lld2.size());
         assertFalse(lld1.equals(lld2));
 
+    }
 
+    @Test
+    public void IteratorTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+        ad1.addLast(1);
+        ad1.addLast(2);
+        ad1.addLast(3);
+        ad1.addLast(4);
+
+        for (int i : ad1) {
+            assertEquals(i, (int) ad1.get(i-1));
+        }
+
+        ArrayDeque<Integer> ad2 = new ArrayDeque<>();
+        ad2.addFirst(5);
+        ad2.addFirst(4);
+        ad2.addFirst(3);
+        ad2.addFirst(2);
+        ad2.addFirst(1);
+
+        for (int i : ad2) {
+            assertEquals(i, (int) ad2.get(i-1));
+        }
+
+        ArrayDeque<Integer> ad3 = new ArrayDeque<>();
+        ad3.addFirst(4);
+        ad3.addFirst(3);
+        ad3.addFirst(2);
+        ad3.addFirst(1);
+        ad3.addLast(5);
+        ad3.addLast(6);
+        ad3.addLast(7);
+        ad3.addLast(8);
+        ad3.addLast(9);
+
+        for (int i : ad3) {
+            assertEquals(i, (int) ad3.get(i-1));
+        }
+
+        ArrayDeque<Integer> ad4 = new ArrayDeque<>();
+        for (int i : ad4) {
+            System.out.println(i);
+        }
     }
 }

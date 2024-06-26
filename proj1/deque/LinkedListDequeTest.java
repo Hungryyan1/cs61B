@@ -175,7 +175,24 @@ public class LinkedListDequeTest {
         lld2.removeFirst();
         System.out.println(lld2.size());
         assertFalse(lld1.equals(lld2));
-
-
     }
+
+    @Test
+    public void IteratorTest(){
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        lld1.addLast(1);
+        lld1.addLast(2);
+        lld1.addLast(3);
+        lld1.addLast(4);
+
+        for (int i : lld1) {
+            assertEquals(i, (int) lld1.get(i-1));
+        }
+
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+        for (int i : lld2) {
+            System.out.println(i);
+        }
+    }
+
 }

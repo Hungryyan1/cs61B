@@ -1,10 +1,13 @@
 package deque;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Double Linked two sentinel List-based Deque
  * @param <Dtype> a datatype to be input
  */
-public class LinkedListDeque<Dtype> {
+public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
     public class DtypeNode {
         public DtypeNode next;
         public DtypeNode prev;
@@ -142,7 +145,6 @@ public class LinkedListDeque<Dtype> {
             return getRecursiveHelper(current.next, index - 1);
         }
     }
-    //public Iterator<Dtype> iterator()
 
     /**
      *  Returns whether or not the parameter o is equal to the Deque.
@@ -164,5 +166,32 @@ public class LinkedListDeque<Dtype> {
             }
         }
         return equals;
+    }
+
+    /* Throw "The deque is empty if size == 0"*/
+    public Iterator<Dtype> iterator() {
+        if (isEmpty()){
+            throw new NoSuchElementException("The deque is empty");
+        }
+        return new LLDequeIterator();
+    }
+
+    private class LLDequeIterator implements Iterator<Dtype> {
+        private DtypeNode p;
+
+        public LLDequeIterator() {
+            p = sentinel.next;
+        }
+
+        public boolean hasNext() {
+            return p != sentinel;
+        }
+
+        public Dtype next() {
+            Dtype item = p.item;
+            p = p.next;
+            return item;
+        }
+
     }
 }
