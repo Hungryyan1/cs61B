@@ -4,38 +4,38 @@ import java.util.NoSuchElementException;
 
 /**
  * Double Linked two sentinel List-based Deque
- * @param <Dtype> a datatype to be input
+ * @param <T> a datatype to be input
  */
-public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
-    public class DtypeNode {
-        public DtypeNode next;
-        public DtypeNode prev;
-        public Dtype item;
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
+    public class TNode {
+        private TNode next;
+        private TNode prev;
+        private T item;
 
-        public DtypeNode(Dtype i, DtypeNode nex, DtypeNode pre) {
+        public TNode(T i, TNode nex, TNode pre) {
             next = nex;
             prev = pre;
             item = i;
         }
     }
     /** circular sentinel topology */
-    private DtypeNode sentinel;
+    private TNode sentinel;
     private int size;
 
     public LinkedListDeque() {
         size = 0;
         // sentinel point at itself
-        sentinel = new DtypeNode(null, null, null);
+        sentinel = new TNode(null, null, null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
     }
 
-    /** Adds an item of Dtype to the front of the deque */
+    /** Adds an item of T to the front of the deque */
     @Override
-    public void addFirst(Dtype item) {
+    public void addFirst(T item) {
         size += 1;
         // No matter whether size is 0
-        DtypeNode newNode = new DtypeNode(item, null, null);
+        TNode newNode = new TNode(item, null, null);
         // access sentinel.next(first item) to connect first
         sentinel.next.prev = newNode;
         newNode.next = sentinel.next;
@@ -44,12 +44,12 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
         newNode.prev = sentinel;
     }
 
-    /** Adds an item of Dtype to the back of the deque. */
+    /** Adds an item of T to the back of the deque. */
     @Override
-    public void addLast(Dtype item) {
+    public void addLast(T item) {
         size += 1;
 
-        DtypeNode newNode = new DtypeNode(item, null, null);
+        TNode newNode = new TNode(item, null, null);
         // access sentinel.prev(the last item) first
         sentinel.prev.next = newNode;
         newNode.prev = sentinel.prev;
@@ -73,7 +73,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
         if (isEmpty()) {
             return;
         }
-        DtypeNode p = sentinel.next;
+        TNode p = sentinel.next;
         while (p != sentinel) {
             System.out.print(p.item + " ");
             p = p.next;
@@ -81,14 +81,15 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
         System.out.println();
     }
 
-    /**  Removes and returns the item at the front of the deque. If no such item exists, returns null. */
+    /**  Removes and returns the item at the front of the deque.
+     * If no such item exists, returns null. */
     @Override
-    public Dtype removeFirst() {
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
         size -= 1;
-        Dtype delete = sentinel.next.item;
+        T delete = sentinel.next.item;
         // access the second item through sentinel.next.next
         sentinel.next.next.prev = sentinel;
         sentinel.next = sentinel.next.next;
@@ -97,15 +98,16 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
     }
 
 
-    /** Removes and returns the item at the back of the deque. If no such item exists, returns null. */
+    /** Removes and returns the item at the back of the deque.
+     * If no such item exists, returns null. */
     @Override
-    public Dtype removeLast() {
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
         size -= 1;
 
-        Dtype delete = sentinel.prev.item;
+        T delete = sentinel.prev.item;
         // same as above
         sentinel.prev.prev.next = sentinel;
         sentinel.prev = sentinel.prev.prev;
@@ -115,16 +117,16 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
     /** Gets the item at the given index, where 0 is the front, 1 is the next item,
      *  and so forth. If no such item exists, returns null. Must not alter the deque! */
     @Override
-    public Dtype get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
 
-        DtypeNode p = sentinel.next;
+        TNode p = sentinel.next;
         int i = 0;
         while (p != sentinel) {
             if (i == index) {
-               break;
+                break;
             }
             p = p.next;
             i += 1;
@@ -132,14 +134,14 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
         return p.item;
     }
     /** same function as get(), but use recursion */
-    public Dtype getRecursive(int index) {
+    public T getRecursive(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
         return getRecursiveHelper(sentinel.next, index);
     }
 
-    private Dtype getRecursiveHelper(DtypeNode current, int index) {
+    private T getRecursiveHelper(TNode current, int index) {
         if (index == 0) {
             return current.item;
         } else {
@@ -170,15 +172,15 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
     }
 
     /* Throw "The deque is empty if size == 0"*/
-    public Iterator<Dtype> iterator() {
-        if (isEmpty()){
+    public Iterator<T> iterator() {
+        if (isEmpty()) {
             throw new NoSuchElementException("The deque is empty");
         }
         return new LLDequeIterator();
     }
 
-    private class LLDequeIterator implements Iterator<Dtype> {
-        private DtypeNode p;
+    private class LLDequeIterator implements Iterator<T> {
+        private TNode p;
 
         public LLDequeIterator() {
             p = sentinel.next;
@@ -188,8 +190,8 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
             return p != sentinel;
         }
 
-        public Dtype next() {
-            Dtype item = p.item;
+        public T next() {
+            T item = p.item;
             p = p.next;
             return item;
         }

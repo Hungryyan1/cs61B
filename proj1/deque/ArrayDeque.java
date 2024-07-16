@@ -2,14 +2,14 @@ package deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
+public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     private int size;
-    private Item[] items;
+    private T[] items;
     private int nextfirst;
     private int nextlast;
 
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (T[]) new Object[8];
         // start from middle
         nextfirst = 3;
         nextlast = 4;
@@ -21,8 +21,8 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
 
 
     @Override
-    public void addFirst(Item item) {
-        if (size + 1> items.length) {
+    public void addFirst(T item) {
+        if (size + 1 > items.length) {
             resize(items.length * 2);
         }
         size += 1;
@@ -34,8 +34,8 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         }
     }
     @Override
-    public void addLast(Item item) {
-        if (size + 1> items.length) {
+    public void addLast(T item) {
+        if (size + 1 > items.length) {
             resize(items.length * 2);
         }
         size += 1;
@@ -50,11 +50,11 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
     *  copy the old (sorted) to the middle of new array
     */
     private void resize(int newSize) {
-        Item[] newItems = (Item[]) new Object[newSize];
+        T[] newItems = (T[]) new Object[newSize];
 
         int start = (newSize - size) / 2;
 
-        Item[] sortedItems = sortArrayFromFirstToLast();
+        T[] sortedItems = sortArrayFromFirstToLast();
 
         System.arraycopy(sortedItems, 0, newItems, start, size);
 
@@ -64,10 +64,10 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         nextlast = start + size;
     }
 
-    private Item[] sortArrayFromFirstToLast() {
-        Item[] sortItems = (Item[]) new Object[size];
+    private T[] sortArrayFromFirstToLast() {
+        T[] sortItems = (T[]) new Object[size];
         int first = (nextfirst + 1) % items.length;  // first item index
-        int last = (nextlast + items.length - 1 ) % items.length; // last item index
+        int last = (nextlast + items.length - 1) % items.length; // last item index
         if (first >= last) {
             for (int i = first; i < items.length; i++) {
                 sortItems[i - first] = items[i];
@@ -87,14 +87,14 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         if (size == 0) {
             return;
         }
-        Item[] sortItems = sortArrayFromFirstToLast();
+        T[] sortItems = sortArrayFromFirstToLast();
         for (int i = 0; i < size; i++) {
             System.out.print(sortItems[i] + " ");
         }
         System.out.println();
     }
     @Override
-    public Item removeFirst() {
+    public T removeFirst() {
         if (size == 0) {
             return null;
         }
@@ -103,13 +103,13 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         }
         size -= 1;
         int first = (nextfirst + 1) % items.length;
-        Item item = items[first];
+        T item = items[first];
         items[first] = null;
         nextfirst = first;
         return item;
     }
     @Override
-    public Item removeLast() {
+    public T removeLast() {
         if (size == 0) {
             return null;
         }
@@ -120,14 +120,14 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
             resize(items.length / 2);
         }
         size -= 1;
-        int last = (nextlast + items.length - 1 ) % items.length;
-        Item item = items[last];
+        int last = (nextlast + items.length - 1) % items.length;
+        T item = items[last];
         items[last] = null;
         nextlast = last;
         return item;
     }
     @Override
-    public Item get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -156,7 +156,7 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     /* Throw "The deque is empty if size is 0" */
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         if (size == 0) {
             throw new NoSuchElementException("The deque is empty");
         }
@@ -164,11 +164,11 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     /* Iterate the Deque according to sequence */
-    private class ArrayDequeIterator implements Iterator<Item> {
+    private class ArrayDequeIterator implements Iterator<T> {
         private int index;
-        private Item[] itemsSort;
+        private T[] itemsSort;
 
-        public ArrayDequeIterator() {
+        ArrayDequeIterator() {
             index = 0;
             itemsSort = sortArrayFromFirstToLast();
         }
@@ -177,8 +177,8 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
             return index < size;
         }
 
-        public Item next() {
-            Item item = itemsSort[index];
+        public T next() {
+            T item = itemsSort[index];
             index += 1;
             return item;
         }
