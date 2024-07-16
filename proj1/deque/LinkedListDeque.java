@@ -1,5 +1,4 @@
 package deque;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -7,7 +6,7 @@ import java.util.NoSuchElementException;
  * Double Linked two sentinel List-based Deque
  * @param <Dtype> a datatype to be input
  */
-public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
+public class LinkedListDeque<Dtype> implements Iterable<Dtype>, Deque<Dtype> {
     public class DtypeNode {
         public DtypeNode next;
         public DtypeNode prev;
@@ -32,6 +31,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
     }
 
     /** Adds an item of Dtype to the front of the deque */
+    @Override
     public void addFirst(Dtype item) {
         size += 1;
         // No matter whether size is 0
@@ -45,6 +45,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
     }
 
     /** Adds an item of Dtype to the back of the deque. */
+    @Override
     public void addLast(Dtype item) {
         size += 1;
 
@@ -59,18 +60,15 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
     }
 
 
-    /** Returns true if deque is empty, false otherwise */
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
     /** Returns the number of items in the deque. */
+    @Override
     public int size() {
         return size;
     }
 
     /** Prints the items in the deque from first to last,
      * separated by a space. Once all the items have been printed, print out a new line.*/
+    @Override
     public void printDeque() {
         if (isEmpty()) {
             return;
@@ -84,6 +82,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
     }
 
     /**  Removes and returns the item at the front of the deque. If no such item exists, returns null. */
+    @Override
     public Dtype removeFirst() {
         if (isEmpty()) {
             return null;
@@ -99,6 +98,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
 
 
     /** Removes and returns the item at the back of the deque. If no such item exists, returns null. */
+    @Override
     public Dtype removeLast() {
         if (isEmpty()) {
             return null;
@@ -114,6 +114,7 @@ public class LinkedListDeque<Dtype> implements Iterable<Dtype> {
 
     /** Gets the item at the given index, where 0 is the front, 1 is the next item,
      *  and so forth. If no such item exists, returns null. Must not alter the deque! */
+    @Override
     public Dtype get(int index) {
         if (index < 0 || index >= size) {
             return null;

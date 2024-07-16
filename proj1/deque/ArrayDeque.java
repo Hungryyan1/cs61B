@@ -2,7 +2,7 @@ package deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayDeque<Item> implements Iterable<Item> {
+public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
     private int size;
     private Item[] items;
     private int nextfirst;
@@ -14,16 +14,13 @@ public class ArrayDeque<Item> implements Iterable<Item> {
         nextfirst = 3;
         nextlast = 4;
     }
-
+    @Override
     public int size() {
         return size;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
 
-
+    @Override
     public void addFirst(Item item) {
         if (size + 1> items.length) {
             resize(items.length * 2);
@@ -36,7 +33,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
             nextfirst--;
         }
     }
-
+    @Override
     public void addLast(Item item) {
         if (size + 1> items.length) {
             resize(items.length * 2);
@@ -85,6 +82,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
         }
         return sortItems;
     }
+    @Override
     public void printDeque() {
         if (size == 0) {
             return;
@@ -95,7 +93,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
         }
         System.out.println();
     }
-
+    @Override
     public Item removeFirst() {
         if (size == 0) {
             return null;
@@ -110,7 +108,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
         nextfirst = first;
         return item;
     }
-
+    @Override
     public Item removeLast() {
         if (size == 0) {
             return null;
@@ -128,7 +126,7 @@ public class ArrayDeque<Item> implements Iterable<Item> {
         nextlast = last;
         return item;
     }
-
+    @Override
     public Item get(int index) {
         if (index < 0 || index >= size) {
             return null;
