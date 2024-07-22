@@ -80,7 +80,7 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
     **/
     @Override
     public void put(K key, V value) {
-        size += 1;git 
+        size += 1;
         if (root == null) {
             root = new BSTNode();
             root.key = key;
