@@ -19,7 +19,7 @@ public class Init {
     public static void setGitlet() {
         if (!GITLET_FOLDER.exists()) {
             GITLET_FOLDER.mkdir();
-            //create first commit
+            Commit firstCommit = new Commit("initial commit", null, null, "master");
         } else {
             System.out.println("A Gitlet version-control system" +
                     " already exists in the current directory.");
