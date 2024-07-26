@@ -34,7 +34,7 @@ public class Add  {
         Files.copy(source.toPath(), dest.toPath());
     }
 
-    /** Copy the file to the staging area if it is not staged.
+    /** Copy the file to the staging area for addition if it is not staged.
      *  If*/
     public static void copyFileToStage(String fileName) throws IOException {
         File fileToStage = Utils.join(Repository.CWD, fileName);
@@ -102,9 +102,11 @@ public class Add  {
 
     /** If stage for addition is empty*/
     public static boolean isStageEmpty() {
-        if (Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER) == null) {
+        if (Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER) == null
+                && Utils.plainFilenamesIn(Repository.STAGING_REMOVAL_FOLDER) == null) {
             return true;
         }
-        return Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER).isEmpty();
+        return Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER).isEmpty()
+                && Utils.plainFilenamesIn(Repository.STAGING_REMOVAL_FOLDER).isEmpty();
     }
 }

@@ -140,4 +140,9 @@ public class Repository {
         // clear the staging area after a commit
         Add.clearStagingArea();
     }
+
+    /** run rm */
+    public static void remove(String fileName) throws IOException {
+        Remove.remove(fileName);
+    }
 }

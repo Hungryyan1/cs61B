@@ -119,5 +119,4 @@ public class Commit implements Serializable {
         return Utils.readObject(file, Commit.class);
     }
 
-
 }

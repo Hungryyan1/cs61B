@@ -30,12 +30,17 @@ public class Main {
                 break;
             // TODO: FILL THE REST IN
             case "commit":
-                if (args.length ==1) {
+                if (args.length == 1) {
                     System.out.println("Please enter a commit message.");
                 }
                 validateNumArgs(args, 2);
                 String message = args[1];
                 Repository.commit(message);
+                break;
+            case "rm":
+                validateNumArgs(args, 2);
+                String fileToRemove = args[1];
+                Repository.remove(fileToRemove);
                 break;
             default:
                 System.out.println("No command with that name exists.");
