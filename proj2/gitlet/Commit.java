@@ -6,6 +6,7 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.util.Date; // TODO: You'll likely use this in this class
 import java.util.Objects;
+import java.util.TreeMap;
 
 /** Represents a gitlet commit object.
  *  Write the commit message(message, time, blobRefs, parentRef)
@@ -24,9 +25,9 @@ public class Commit implements Serializable {
     private String message;
     /** The date and time of the commit */
     private String timestamp;
-
-    /** References(SHA-1 Hash) for the files the commit has.*/
-    private String[] blobs;
+    /** References(SHA-1 Hash) for the files the commit has.
+     * <Hash, Filename> */
+    private TreeMap<String, String> blobs;
     /** Reference(Hash) of the parent */
     private String parent;
     /** SHA-1 Hash for the current commit */
@@ -52,10 +53,10 @@ public class Commit implements Serializable {
         return commitId;
     }
 
-    public String[] getBlobs() {return blobs;}
+    public TreeMap<String, String> getBlobs() {return blobs;}
 
     public String getBranch() { return branch; }
-    public Commit(String message,  String[] blobs, String parent, String branch) {
+    public Commit(String message,  TreeMap<String, String> blobs, String parent, String branch) {
         if (Objects.equals(message, "initial commit")){
             this.timestamp = GetDate.getDate0();
         } else {
@@ -95,7 +96,11 @@ public class Commit implements Serializable {
 
     /** Make persistence. Save Commit Object in object/Commits folder*/
     public void writeCommit() {
-        File file = Utils.join(Repository.COMMITS_FOLDER, commitId);
+        File COMMIT_FOLDER = Utils.join(Repository.OBJECT_FOLDER, "Commits");
+        if (!COMMIT_FOLDER.exists()) {
+            COMMIT_FOLDER.mkdir();
+        }
+        File file = Utils.join(COMMIT_FOLDER, commitId);
         Utils.writeObject(file, this);
     }
 
