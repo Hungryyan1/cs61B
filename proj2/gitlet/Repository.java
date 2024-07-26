@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.TreeMap;
 
 import static gitlet.Utils.*;
@@ -70,11 +71,18 @@ public class Repository {
             System.exit(0);
         }
         if (Add.isSameAsCurrentCommit(fileName)) {
+            System.out.println(fileName + " is the same as the current commit");
             //the current working version of the file is
             // identical to the version in the current commit.
-            if (Add.isStaged(fileName)) {
-                Add.removeFromStage(fileName);
+            List<String> fileNames = Utils.plainFilenamesIn(Repository.STAGING_FOLDER);
+            if (!fileNames.isEmpty()) {
+                if (fileNames.contains(fileName)) {
+                    Add.removeFromStage(fileName);
+                }
             }
+            System.exit(0);
+        }
+        if (Add.isStaged(fileToStage)) { // is identical to the staged file
             System.exit(0);
         }
         createStagingFolder();
