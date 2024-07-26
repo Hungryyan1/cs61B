@@ -21,7 +21,7 @@ public class Remove {
             System.exit(0);
         }
         if (isStaged(fileName)) {
-            Add.removeFromStage(fileName);
+            Add.removeAddFromStage(fileName);
         }
         if (isTracked(fileName)) {
             Utils.restrictedDelete(fileName);

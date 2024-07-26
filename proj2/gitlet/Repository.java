@@ -34,6 +34,10 @@ public class Repository {
     public static final File HEADS_FOLDER = Utils.join(GITLET_DIR, "Heads");
     /** Index file that represents staging area */
     public static final File STAGING_FOLDER = Utils.join(GITLET_DIR, "index");
+
+    public static final File STAGING_ADDITION_FOLDER = Utils.join(STAGING_FOLDER, "addition");
+
+    public static final File STAGING_REMOVAL_FOLDER = Utils.join(STAGING_FOLDER, "removal");
     /* TODO: fill in the rest of this class. */
 
 
@@ -52,6 +56,12 @@ public class Repository {
     public static void createStagingFolder() {
         if (!STAGING_FOLDER.exists()) {
             STAGING_FOLDER.mkdir();
+        }
+        if (!STAGING_ADDITION_FOLDER.exists()) {
+            STAGING_ADDITION_FOLDER.mkdir();
+        }
+        if (!STAGING_REMOVAL_FOLDER.exists()) {
+            STAGING_REMOVAL_FOLDER.mkdir();
         }
     }
 
@@ -74,10 +84,10 @@ public class Repository {
             System.out.println(fileName + " is the same as the current commit");
             //the current working version of the file is
             // identical to the version in the current commit.
-            List<String> fileNames = Utils.plainFilenamesIn(Repository.STAGING_FOLDER);
+            List<String> fileNames = Utils.plainFilenamesIn(STAGING_ADDITION_FOLDER);
             if (!fileNames.isEmpty()) {
                 if (fileNames.contains(fileName)) {
-                    Add.removeFromStage(fileName);
+                    Add.removeAddFromStage(fileName);
                 }
             }
             System.exit(0);
@@ -106,11 +116,11 @@ public class Repository {
         TreeMap<String, String> blobsTree = parentCommit.getBlobs();
 
         // iterate through the staging area to change the blobs in the parent commit.
-        for (String fileName : Utils.plainFilenamesIn(STAGING_FOLDER)) {
+        for (String fileName : Utils.plainFilenamesIn(STAGING_ADDITION_FOLDER)) {
             if (blobsTree != null && blobsTree.containsKey(fileName)) {
                 blobsTree.remove(fileName);
             }
-            File fileStaged =Utils.join(STAGING_FOLDER, fileName);
+            File fileStaged =Utils.join(STAGING_ADDITION_FOLDER, fileName);
             String hash = Utils.sha1((Object) Utils.readContents(fileStaged));
             File fileToCommit = Utils.join(OBJECT_FOLDER, hash);
 
