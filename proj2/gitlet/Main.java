@@ -29,6 +29,14 @@ public class Main {
                 Repository.add(fileName);
                 break;
             // TODO: FILL THE REST IN
+            case "commit":
+                if (args.length ==1) {
+                    System.out.println("Please enter a commit message.");
+                }
+                validateNumArgs(args, 2);
+                String message = args[1];
+                Repository.commit(message);
+                break;
             default:
                 System.out.println("No command with that name exists.");
                 System.exit(0);

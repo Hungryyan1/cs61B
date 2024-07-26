@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.TreeMap;
 
 import static gitlet.Utils.*;
 
@@ -54,7 +55,7 @@ public class Repository {
     }
 
     /** Run the Init commit. */
-    public static void init() {
+    public static void init() throws IOException {
         Init.setGitlet();
     }
 
@@ -68,7 +69,7 @@ public class Repository {
             System.out.println("File does not exist.");
             System.exit(0);
         }
-        if (Add.isSameAsCommitVersion(fileName)) {
+        if (Add.isSameAsCurrentCommit(fileName)) {
             //the current working version of the file is
             // identical to the version in the current commit.
             if (Add.isStaged(fileName)) {
@@ -81,17 +82,44 @@ public class Repository {
     }
 
     /** Make a commit */
-    public static void commit(String message) {
-        // Should somehow get blobs from the staging area,
+    public static void commit(String message) throws IOException {
         // see if staging area is empty
-
+        if (Add.isStageEmpty()) {
+            System.out.println("No changes added to the commit.");
+            System.exit(0);
+        }
+        // create the object folder and the Head folder
         createObjectFolder();
         createHeadFolder();
         // Find this commit's parent, should be the head ref in the directory.
         String parent = Commit.getHead();
         // copy the parent commit
         Commit parentCommit = Commit.findCommit(parent);
-        Commit newCommit = new Commit(message, parentCommit.getBlobs(), parent, parentCommit.getBranch());
+        TreeMap<String, String> blobsTree = parentCommit.getBlobs();
 
+        // iterate through the staging area to change the blobs in the parent commit.
+        for (String fileName : Utils.plainFilenamesIn(STAGING_FOLDER)) {
+            if (blobsTree != null && blobsTree.containsKey(fileName)) {
+                blobsTree.remove(fileName);
+            }
+            File fileStaged =Utils.join(STAGING_FOLDER, fileName);
+            String hash = Utils.sha1((Object) Utils.readContents(fileStaged));
+            File fileToCommit = Utils.join(OBJECT_FOLDER, hash);
+
+            // put the new blobs in the tree map
+            if (blobsTree == null) {
+                blobsTree = new TreeMap<>();
+            }
+            blobsTree.put(fileName, hash);
+            // Copy the file from staging area to the object folder
+            Add.copyFile(fileStaged, fileToCommit);
+        }
+
+        Commit newCommit = new Commit(message, blobsTree, parent, parentCommit.getBranch());
+        newCommit.makeHead();
+        newCommit.writeCommit();
+
+        // clear the staging area after a commit
+        Add.clearStagingArea();
     }
 }

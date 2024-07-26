@@ -3,7 +3,6 @@ package gitlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.TreeMap;
@@ -34,7 +33,7 @@ public class Add  {
         return false;
     }
 
-    private static void copyFile(File source, File dest) throws IOException {
+    public static void copyFile(File source, File dest) throws IOException {
         Files.copy(source.toPath(), dest.toPath());
     }
 
@@ -50,7 +49,7 @@ public class Add  {
 
     /** Return true if the current working version of the file is identical
      *  to the version in the current commit */
-    public static boolean isSameAsCommitVersion(String fileName)  {
+    public static boolean isSameAsCurrentCommit(String fileName)  {
         File fileToStage = Utils.join(Repository.CWD, fileName);
         String head = Commit.getHead();
         Commit commit = Commit.findCommit(head);
@@ -61,7 +60,7 @@ public class Add  {
         if (map == null) {
             return false;
         }
-        return map.containsKey(Utils.sha1(fileToStage));
+        return map.containsValue(Utils.sha1((Object) Utils.readContents(fileToStage)));
     }
 
     /** Remove a file from staging area */
@@ -69,9 +68,24 @@ public class Add  {
         if (isStaged(fileName)) {
             File fileStaged = Utils.join(Repository.STAGING_FOLDER, fileName);
             fileStaged.delete();
-        } else {
-            System.out.println(fileName + " is not a staging file");
         }
     }
 
+    /** Clear the staging area (after a commit) */
+    public static void clearStagingArea() {
+        List<String> fileNames = Utils.plainFilenamesIn(Repository.STAGING_FOLDER);
+        if (fileNames == null) {
+            return;
+        }
+        for (String fileName : fileNames) {
+            removeFromStage(fileName);
+        }
+    }
+
+    public static boolean isStageEmpty() {
+        if (Utils.plainFilenamesIn(Repository.STAGING_FOLDER) == null) {
+            return true;
+        }
+        return Utils.plainFilenamesIn(Repository.STAGING_FOLDER).isEmpty();
+    }
 }

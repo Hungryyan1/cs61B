@@ -17,6 +17,9 @@ import java.util.TreeMap;
  *  Need a file to store our commits(hash).(Maybe Link list)
  *  Write and read the list object.
  *
+ *  Usage:
+ *  new commit(,,,), createObjectFolder, createHeadsFolder
+ *  makeHead(), writeCommit()
  *  @author Hungry
  */
 public class Commit implements Serializable {
@@ -26,7 +29,7 @@ public class Commit implements Serializable {
     /** The date and time of the commit */
     private String timestamp;
     /** References(SHA-1 Hash) for the files the commit has.
-     * <Hash, Filename> */
+     * <Filename, Hash> */
     private TreeMap<String, String> blobs;
     /** Reference(Hash) of the parent */
     private String parent;
@@ -59,6 +62,7 @@ public class Commit implements Serializable {
     public Commit(String message,  TreeMap<String, String> blobs, String parent, String branch) {
         if (Objects.equals(message, "initial commit")){
             this.timestamp = GetDate.getDate0();
+
         } else {
             this.timestamp = GetDate.getDate();
         }
@@ -71,7 +75,12 @@ public class Commit implements Serializable {
 
     /** Create commit ID */
     public String createCommitID() {
-        return Utils.sha1(message, blobs, parent, timestamp);
+        if (parent == null) { //first commit
+            return Utils.sha1(message, timestamp);
+        } else if (blobs == null) {
+            return Utils.sha1(message,  parent, timestamp);
+        }
+        return Utils.sha1(message, blobs.toString(), parent, timestamp);
     }
 
     /** Make the Head pointer point at the current commit(in master branch)
@@ -106,7 +115,7 @@ public class Commit implements Serializable {
 
     /** Find the commit in the object/Commits folder according to commitID */
     public static Commit findCommit(String commitId) {
-        File file = Utils.join(Repository.GITLET_DIR, "Commits", commitId);
+        File file = Utils.join(Repository.OBJECT_FOLDER, "Commits", commitId);
         return Utils.readObject(file, Commit.class);
     }
 

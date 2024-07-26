@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
 
 import static gitlet.Utils.join;
 
@@ -16,10 +17,14 @@ public class Init {
 
     static final File GITLET_FOLDER = join(CWD, ".gitlet");
 
-    public static void setGitlet() {
+    public static void setGitlet() throws IOException {
         if (!GITLET_FOLDER.exists()) {
             GITLET_FOLDER.mkdir();
             Commit firstCommit = new Commit("initial commit", null, null, "master");
+            Repository.createHeadFolder();
+            Repository.createObjectFolder();
+            firstCommit.writeCommit();
+            firstCommit.makeHead();
         } else {
             System.out.println("A Gitlet version-control system" +
                     " already exists in the current directory.");
