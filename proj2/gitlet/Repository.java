@@ -147,7 +147,7 @@ public class Repository {
 
         Commit newCommit = new Commit(message, blobsTree, parent, parentCommit.getBranch());
         newCommit.makeHead();
-        newCommit.makeBranch(newCommit.getBranch());
+        newCommit.makeBranchHead(newCommit.getBranch());
         newCommit.writeCommit();
 
         // clear the staging area after a commit
@@ -187,4 +187,5 @@ public class Repository {
         Status.printUntracked();
         System.out.println();
     }
+    
 }

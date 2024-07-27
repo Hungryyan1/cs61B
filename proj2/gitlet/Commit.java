@@ -3,8 +3,6 @@ package gitlet;
 // TODO: any imports you need here
 
 import java.io.*;
-import java.security.MessageDigest;
-import java.util.Date; // TODO: You'll likely use this in this class
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -101,7 +99,9 @@ public class Commit implements Serializable {
         Utils.writeContents(headFile, commitId);
     }
 
-    public void makeBranch(String BranchName) throws IOException {
+    /** make a branch head with the given name, store it in the Branches folder
+     * file name is the branch name, content is the commit ID */
+    public void makeBranchHead(String BranchName) throws IOException {
         File branchFile = Utils.join(Repository.BRANCHES_FOLDER, BranchName);
         if (branchFile.exists()) {
             branchFile.delete();

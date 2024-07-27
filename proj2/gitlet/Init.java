@@ -25,7 +25,7 @@ public class Init {
             Repository.createBranchFolder();
             Repository.createObjectFolder();
             firstCommit.writeCommit();
-            firstCommit.makeBranch(firstCommit.getBranch());
+            firstCommit.makeBranchHead(firstCommit.getBranch());
             firstCommit.makeHead();
         } else {
             System.out.println("A Gitlet version-control system" +
