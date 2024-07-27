@@ -78,15 +78,19 @@ public class Repository {
     }
 
     /** Run the Init commit. */
-    public static void init() throws IOException {
-        Init.setGitlet();
+    public static void init()  {
+        try {
+            Init.setGitlet();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** Run the Add commit
      * If the current working version of the file is identical
      * to the version in the current commit, do not stage it to
      * be added, and remove it from the staging area if it is already there  */
-    public static void add(String fileName) throws IOException {
+    public static void add(String fileName) {
         File fileToStage = Utils.join(CWD, fileName);
         if (!fileToStage.exists()) {
             System.out.println("File does not exist.");
@@ -187,5 +191,5 @@ public class Repository {
         Status.printUntracked();
         System.out.println();
     }
-    
+
 }

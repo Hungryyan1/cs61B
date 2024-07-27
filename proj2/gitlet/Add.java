@@ -30,13 +30,17 @@ public class Add  {
         return false;
     }
 
-    public static void copyFile(File source, File dest) throws IOException {
-        Files.copy(source.toPath(), dest.toPath());
+    public static void copyFile(File source, File dest) {
+        try {
+            Files.copy(source.toPath(), dest.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** Copy the file to the staging area for addition if it is not staged.
      *  If*/
-    public static void copyFileToStage(String fileName) throws IOException {
+    public static void copyFileToStage(String fileName) {
         File fileToStage = Utils.join(Repository.CWD, fileName);
         if (!isStaged(fileToStage)) {
             List<String> fileNames = Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER);

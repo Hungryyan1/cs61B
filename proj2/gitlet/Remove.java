@@ -19,7 +19,7 @@ import java.util.TreeMap;
  */
 
 public class Remove {
-    public static void remove(String fileName) throws IOException {
+    public static void remove(String fileName) {
         if (!isStagedForAddition(fileName) && !isTracked(fileName)){
             System.out.println("No reason to remove the file.");
             System.exit(0);
@@ -30,7 +30,11 @@ public class Remove {
         if (isTracked(fileName)) {
             if (!isStagedForRemoval(fileName)) {
                 File file = Utils.join(Repository.STAGING_REMOVAL_FOLDER, fileName);
-                file.createNewFile();
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             File fileToDelete = Utils.join(Repository.CWD, fileName);
             if (fileToDelete.exists()) {

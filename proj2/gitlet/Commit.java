@@ -90,23 +90,31 @@ public class Commit implements Serializable {
      *                        /head
      *  In other words, we use the file directory to represent branch info.
      * */
-    public void makeHead() throws IOException {
+    public void makeHead() {
         File headFile = Utils.join(Repository.HEADS_FOLDER, "head");
         if (headFile.exists()) {
             headFile.delete();
         }
-        headFile.createNewFile();
+        try {
+            headFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Utils.writeContents(headFile, commitId);
     }
 
     /** make a branch head with the given name, store it in the Branches folder
      * file name is the branch name, content is the commit ID */
-    public void makeBranchHead(String BranchName) throws IOException {
+    public void makeBranchHead(String BranchName) {
         File branchFile = Utils.join(Repository.BRANCHES_FOLDER, BranchName);
         if (branchFile.exists()) {
             branchFile.delete();
         }
-        branchFile.createNewFile();
+        try {
+            branchFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Utils.writeContents(branchFile, commitId);
     }
 

@@ -17,7 +17,7 @@ public class Checkout {
      * "File does not exist in that commit."
      * @param fileName
      */
-    public static void checkoutFile(String fileName) throws IOException {
+    public static void checkoutFile(String fileName) {
         String head = Commit.getHead();
         checkoutFileInCommit(head, fileName);
     }
@@ -36,7 +36,7 @@ public class Checkout {
     /**
      * Checkout the file in the given commit.
      */
-    public static void checkoutFileInCommit(String commitID, String fileName) throws IOException {
+    public static void checkoutFileInCommit(String commitID, String fileName) {
         if (commitID.length() < 40 ) { // It is abbreviated
             commitID = findFullCommitID(commitID);
             if (commitID == null) {
@@ -81,7 +81,7 @@ public class Checkout {
      * is the current branch.
      * @param branchName
      */
-    public static void checkoutBranch(String branchName) throws IOException {
+    public static void checkoutBranch(String branchName) {
         File branchHead = Utils.join(Repository.BRANCHES_FOLDER, branchName);
         if (!branchHead.exists()) {
             System.out.println("No such branch exists.");
