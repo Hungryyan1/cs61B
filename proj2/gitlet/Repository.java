@@ -65,6 +65,11 @@ public class Repository {
         }
     }
 
+    /** Return false if the current directory doesn't contain .gitlet folder.*/
+    public static boolean isGitlet() {
+        return GITLET_DIR.exists();
+    }
+
     /** Run the Init commit. */
     public static void init() throws IOException {
         Init.setGitlet();
@@ -81,7 +86,7 @@ public class Repository {
             System.exit(0);
         }
         if (Add.isSameAsCurrentCommit(fileName)) {
-            System.out.println(fileName + " is the same as the current commit");
+            //System.out.println(fileName + " is the same as the current commit");
             //the current working version of the file is
             // identical to the version in the current commit.
             List<String> fileNames = Utils.plainFilenamesIn(STAGING_ADDITION_FOLDER);
@@ -103,7 +108,7 @@ public class Repository {
     public static void commit(String message) throws IOException {
         // see if staging area is empty
         if (Add.isStageEmpty()) {
-            System.out.println("No changes added to the commit.");
+            //System.out.println("No changes added to the commit.");
             System.exit(0);
         }
         // create the object folder and the Head folder
@@ -144,5 +149,15 @@ public class Repository {
     /** run rm */
     public static void remove(String fileName) throws IOException {
         Remove.remove(fileName);
+    }
+
+    /** run log */
+    public static void log() {
+        Log.log();
+    }
+
+    /** run global-log */
+    public static void globalLog() {
+        Log.globalLog();
     }
 }

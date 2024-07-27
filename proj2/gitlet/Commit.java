@@ -33,6 +33,7 @@ public class Commit implements Serializable {
     private TreeMap<String, String> blobs;
     /** Reference(Hash) of the parent */
     private String parent;
+    private String secondParent;
     /** SHA-1 Hash for the current commit */
     private String commitId;
     /** Record the current branch the commit at */
@@ -56,6 +57,8 @@ public class Commit implements Serializable {
         return commitId;
     }
 
+    public String getSecondParent() { return secondParent; }
+
     public TreeMap<String, String> getBlobs() {return blobs;}
 
     public String getBranch() { return branch; }
@@ -71,6 +74,7 @@ public class Commit implements Serializable {
         this.parent = parent;
         this.branch = branch;
         this.commitId = createCommitID();
+        this.secondParent = null;
     }
 
     /** Create commit ID */

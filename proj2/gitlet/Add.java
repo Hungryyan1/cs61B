@@ -57,12 +57,12 @@ public class Add  {
         String head = Commit.getHead();
         Commit commit = Commit.findCommit(head);
         if (commit == null) {
-            System.out.println("Commit is null");
+            //System.out.println("Commit is null");
             return false;
         }
         TreeMap<String, String> map = commit.getBlobs();
         if (map == null) {
-            System.out.println("Blobs is null");
+            //System.out.println("Blobs is null");
             return false;
         }
         return map.containsValue(Utils.sha1((Object) Utils.readContents(fileToStage)));
