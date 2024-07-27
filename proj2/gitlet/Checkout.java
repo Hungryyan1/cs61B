@@ -22,13 +22,32 @@ public class Checkout {
         checkoutFileInCommit(head, fileName);
     }
 
+    /** Find the full commit ID according to the short*/
+    public static String findFullCommitID(String shortID) {
+        File commitsDir = Utils.join(Repository.OBJECT_FOLDER, "Commits");
+        for (String fileName : Utils.plainFilenamesIn(commitsDir)) {
+            if (fileName.contains(shortID)) {
+                return fileName;
+            }
+        }
+        return null;
+    }
+
     /**
      * Checkout the file in the given commit.
      */
     public static void checkoutFileInCommit(String commitID, String fileName) throws IOException {
+        if (commitID.length() < 40 ) { // It is abbreviated
+            commitID = findFullCommitID(commitID);
+            if (commitID == null) {
+                System.out.println("No commit with that id exists.");
+                System.exit(1);
+            }
+        }
         Commit commit = Commit.findCommit(commitID);
         if (commit == null) {
             System.out.println("No commit with that id exists.");
+            System.exit(0);
         }
         TreeMap<String, String> blobs = commit.getBlobs();
         if (blobs == null) {
