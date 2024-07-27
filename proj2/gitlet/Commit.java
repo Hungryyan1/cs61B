@@ -101,6 +101,15 @@ public class Commit implements Serializable {
         Utils.writeContents(headFile, commitId);
     }
 
+    public void makeBranch(String BranchName) throws IOException {
+        File branchFile = Utils.join(Repository.BRANCHES_FOLDER, BranchName);
+        if (branchFile.exists()) {
+            branchFile.delete();
+        }
+        branchFile.createNewFile();
+        Utils.writeContents(branchFile, commitId);
+    }
+
     /** Get the Head pointer of the given branch as the parent commit */
     public static String getHead() {
         File headFile = Utils.join(Repository.GITLET_DIR,"Heads", "head");

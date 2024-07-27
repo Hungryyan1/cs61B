@@ -60,6 +60,11 @@ public class Main {
                 validateNumArgs(args, 2);
                 Repository.find(args[1]);
                 break;
+            case "status":
+                checkGitlet();
+                validateNumArgs(args, 1);
+                Repository.status();
+                break;
         default:
             System.out.println("No command with that name exists.");
             System.exit(0);

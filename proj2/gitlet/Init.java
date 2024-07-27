@@ -22,8 +22,10 @@ public class Init {
             GITLET_FOLDER.mkdir();
             Commit firstCommit = new Commit("initial commit", null, null, "master");
             Repository.createHeadFolder();
+            Repository.createBranchFolder();
             Repository.createObjectFolder();
             firstCommit.writeCommit();
+            firstCommit.makeBranch(firstCommit.getBranch());
             firstCommit.makeHead();
         } else {
             System.out.println("A Gitlet version-control system" +

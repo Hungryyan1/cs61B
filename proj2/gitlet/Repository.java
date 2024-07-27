@@ -38,6 +38,8 @@ public class Repository {
     public static final File STAGING_ADDITION_FOLDER = Utils.join(STAGING_FOLDER, "addition");
 
     public static final File STAGING_REMOVAL_FOLDER = Utils.join(STAGING_FOLDER, "removal");
+
+    public static final File BRANCHES_FOLDER = Utils.join(HEADS_FOLDER, "branches");
     /* TODO: fill in the rest of this class. */
 
 
@@ -65,6 +67,11 @@ public class Repository {
         }
     }
 
+    public static void createBranchFolder() {
+        if (!BRANCHES_FOLDER.exists()) {
+            BRANCHES_FOLDER.mkdir();
+        }
+    }
     /** Return false if the current directory doesn't contain .gitlet folder.*/
     public static boolean isGitlet() {
         return GITLET_DIR.exists();
@@ -140,6 +147,7 @@ public class Repository {
 
         Commit newCommit = new Commit(message, blobsTree, parent, parentCommit.getBranch());
         newCommit.makeHead();
+        newCommit.makeBranch(newCommit.getBranch());
         newCommit.writeCommit();
 
         // clear the staging area after a commit
@@ -164,5 +172,19 @@ public class Repository {
     /** run find */
     public static void find(String message) {
         Find.find(message);
+    }
+
+    /** run status */
+    public static void status() {
+        Status.printBranch();
+        System.out.println();
+        Status.printStaged();
+        System.out.println();
+        Status.printRemoval();
+        System.out.println();
+        Status.printModification();
+        System.out.println();
+        Status.printUntracked();
+        System.out.println();
     }
 }
