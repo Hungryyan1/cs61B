@@ -160,4 +160,9 @@ public class Repository {
     public static void globalLog() {
         Log.globalLog();
     }
+
+    /** run find */
+    public static void find(String message) {
+        Find.find(message);
+    }
 }
