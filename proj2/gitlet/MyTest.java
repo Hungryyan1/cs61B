@@ -12,5 +12,7 @@ public class MyTest {
         System.out.println();
         System.out.println(GetDate.getDate());
         System.out.println();
+        String s = "";
+        System.out.println(s.isBlank());
     }
 }

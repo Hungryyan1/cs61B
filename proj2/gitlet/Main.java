@@ -32,16 +32,12 @@ public class Main {
             // TODO: FILL THE REST IN
             case "commit":
                 checkGitlet();
-                if (args.length == 1) {
+                if (args.length == 1 || args[1].isBlank()) {
                     System.out.println("Please enter a commit message.");
                 }
                 validateNumArgs(args, 2);
                 String message = args[1];
-                try {
-                    Repository.commit(message);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                Repository.commit(message);
                 break;
             case "rm":
                 checkGitlet();

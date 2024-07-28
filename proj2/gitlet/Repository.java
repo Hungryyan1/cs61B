@@ -92,6 +92,13 @@ public class Repository {
      * be added, and remove it from the staging area if it is already there  */
     public static void add(String fileName) {
         File fileToStage = Utils.join(CWD, fileName);
+        //The file will no longer be staged for removal
+        // (see gitlet rm), if it was at the time of the command.
+        if (Remove.isStagedForRemoval(fileName)){
+            Add.removeRemovalFromStage(fileName);
+            Checkout.checkoutFile(fileName);
+        }
+        
         if (!fileToStage.exists()) {
             System.out.println("File does not exist.");
             System.exit(0);
@@ -111,15 +118,16 @@ public class Repository {
         if (Add.isStaged(fileToStage)) { // is identical to the staged file
             System.exit(0);
         }
+
         createStagingFolder();
         Add.copyFileToStage(fileName);
     }
 
     /** Make a commit */
-    public static void commit(String message) throws IOException {
+    public static void commit(String message) {
         // see if staging area is empty
         if (Add.isStageEmpty()) {
-            //System.out.println("No changes added to the commit.");
+            System.out.println("No changes added to the commit.");
             System.exit(0);
         }
         // create the object folder and the Head folder
