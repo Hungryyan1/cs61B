@@ -99,17 +99,20 @@ public class Checkout {
 
     }
 
-    public static void checkoutByCommitID(String commitID) {
-        Commit commit = Commit.findCommit(commitID);
-        if (commit == null) {
+    public static void checkoutByCommitID(String branchCommitID) {
+        Commit branchCommit = Commit.findCommit(branchCommitID);
+        String head = Commit.getHead();
+        Commit headCommit = Commit.findCommit(head);
+        TreeMap<String, String> headBlobs = headCommit.getBlobs();
+        if (branchCommit == null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         }
-        TreeMap<String, String> blobs = commit.getBlobs();
+        TreeMap<String, String> branchBlobs = branchCommit.getBlobs();
         List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
         if (workingFiles != null) {
             for (String fileName : workingFiles) {
-                if (blobs == null || !blobs.containsKey(fileName)) {
+                if (branchBlobs.containsKey(fileName) && !headBlobs.containsKey(fileName)) {
                     System.out.println("There is an untracked file in the way; " +
                             "delete it, or add and commit it first.");
                     System.exit(0);
@@ -121,15 +124,15 @@ public class Checkout {
         // but are not present in the checked-out branch are deleted.
         if (workingFiles != null) {
             for (String fileName : workingFiles) {
-                if (!blobs.containsKey(fileName)) {
+                if (headBlobs.containsKey(fileName) && !branchBlobs.containsKey(fileName)) {
                     File fileToDelete = Utils.join(Repository.CWD, fileName);
                     fileToDelete.delete();
                 }
             }
         }
         // deal with each file
-        for (String fileName : blobs.keySet()) {
-            checkoutFileInCommit(commitID, fileName);
+        for (String fileName : branchBlobs.keySet()) {
+            checkoutFileInCommit(branchCommitID, fileName);
         }
 
         Add.clearStagingArea();
