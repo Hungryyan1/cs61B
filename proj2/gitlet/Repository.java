@@ -200,4 +200,12 @@ public class Repository {
         Branch.deleteBranch(branch);
     }
 
+    /** The command is essentially checkout of an arbitrary commit
+     *  that also changes the current branch head.*/
+    public static void reset(String commitID) {
+        Checkout.checkoutByCommitID(commitID);
+        Commit commit = Commit.findCommit(commitID);
+        commit.makeHead();
+    }
+
 }

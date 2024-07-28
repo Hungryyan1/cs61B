@@ -96,6 +96,11 @@ public class Main {
                 validateNumArgs(args, 2);
                 Repository.rmBranch(args[1]);
                 break;
+            case "reset":
+                checkGitlet();
+                validateNumArgs(args, 2);
+                Repository.reset(args[1]);
+                break;
             default:
             System.out.println("No command with that name exists.");
             System.exit(0);

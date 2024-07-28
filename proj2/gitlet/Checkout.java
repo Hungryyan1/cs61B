@@ -1,7 +1,6 @@
 package gitlet;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -96,8 +95,13 @@ public class Checkout {
         // If a working file is untracked in the current
         // branch and would be overwritten by the checkout
         String branchCommitID = Utils.readContentsAsString(branchHead);
-        Commit branchCommit = Commit.findCommit(branchCommitID);
-        TreeMap<String, String> blobs = branchCommit.getBlobs();
+        checkoutByCommitID(branchCommitID);
+
+    }
+
+    public static void checkoutByCommitID(String commitID) {
+        Commit commit = Commit.findCommit(commitID);
+        TreeMap<String, String> blobs = commit.getBlobs();
         List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
         if (workingFiles != null) {
             for (String fileName : workingFiles) {
@@ -121,7 +125,7 @@ public class Checkout {
         }
         // deal with each file
         for (String fileName : blobs.keySet()) {
-            checkoutFileInCommit(branchCommitID, fileName);
+            checkoutFileInCommit(commitID, fileName);
         }
 
         Add.clearStagingArea();
