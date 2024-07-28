@@ -13,7 +13,7 @@ public class GetDate {
         // 使用Formatter来格式化日期
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb, Locale.ENGLISH);
-        formatter.format("%1$tH:%1$tM:%1$tS UTC, %1$tA, %1$te %1$tB %1$tY", currentDate);
+        formatter.format("%1$ta %1$tb %1$td %1$tH:%1$tM:%1$tS %1$tY %1$tz", currentDate);
 
         // 输出结果
         return sb.toString();
@@ -25,9 +25,8 @@ public class GetDate {
         // 使用Formatter来格式化日期
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb, Locale.ENGLISH);
-        formatter.format("%1$tH:%1$tM:%1$tS UTC, %1$tA, %1$te %1$tB %1$tY", currentDate);
+        formatter.format("%1$ta %1$tb %1$td %1$tH:%1$tM:%1$tS %1$tY %1$tz", currentDate);
 
-        // 输出结果
         return sb.toString();
     }
 
