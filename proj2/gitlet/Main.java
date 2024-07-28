@@ -86,6 +86,16 @@ public class Main {
                     System.exit(0);
                 }
                 break;
+            case "branch":
+                checkGitlet();
+                validateNumArgs(args, 2);
+                Repository.branch(args[1]);
+                break;
+            case "rm-branch":
+                checkGitlet();
+                validateNumArgs(args, 2);
+                Repository.rmBranch(args[1]);
+                break;
             default:
             System.out.println("No command with that name exists.");
             System.exit(0);

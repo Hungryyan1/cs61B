@@ -192,4 +192,12 @@ public class Repository {
         System.out.println();
     }
 
+    public static void branch(String branch) {
+        Branch.createBranch(branch);
+    }
+
+    public static void rmBranch(String branch) {
+        Branch.deleteBranch(branch);
+    }
+
 }
