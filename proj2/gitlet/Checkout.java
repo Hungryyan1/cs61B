@@ -105,7 +105,7 @@ public class Checkout {
         List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
         if (workingFiles != null) {
             for (String fileName : workingFiles) {
-                if (!blobs.containsKey(fileName)) {
+                if (blobs == null || blobs.containsKey(fileName)) {
                     System.out.println("There is an untracked file in the way; " +
                             "delete it, or add and commit it first.");
                     System.exit(0);

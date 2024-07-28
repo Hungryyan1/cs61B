@@ -137,6 +137,9 @@ public class Commit implements Serializable {
     /** Find the commit in the object/Commits folder according to commitID */
     public static Commit findCommit(String commitId) {
         File file = Utils.join(Repository.OBJECT_FOLDER, "Commits", commitId);
+        if (!file.exists()){
+            return null;
+        }
         return Utils.readObject(file, Commit.class);
     }
 
