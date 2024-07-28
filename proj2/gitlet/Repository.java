@@ -98,7 +98,7 @@ public class Repository {
             Add.removeRemovalFromStage(fileName);
             Checkout.checkoutFile(fileName);
         }
-        
+
         if (!fileToStage.exists()) {
             System.out.println("File does not exist.");
             System.exit(0);
@@ -145,7 +145,7 @@ public class Repository {
                 blobsTree.remove(fileName);
             }
             File fileStaged =Utils.join(STAGING_ADDITION_FOLDER, fileName);
-            String hash = Utils.sha1((Object) Utils.readContents(fileStaged));
+            String hash = Utils.sha1(Utils.readContentsAsString(fileStaged) + fileName);
             File fileToCommit = Utils.join(OBJECT_FOLDER, hash);
 
             // put the new blobs in the tree map
