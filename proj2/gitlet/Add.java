@@ -15,7 +15,8 @@ import java.util.TreeMap;
 
 public class Add  {
     /** To see if the file has already been staged.
-     *  If returns true, must have exact same contents.*/
+     *  If returns true, must have exact same contents.
+     *  Use hash to identify if the two file equals*/
     public static boolean isStaged(File file) {
         List<String> fileNames = Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER);
         if (fileNames == null) {
@@ -23,7 +24,8 @@ public class Add  {
         }
         for (String fileName : fileNames) {
             File f = Utils.join(Repository.STAGING_ADDITION_FOLDER, fileName);
-            if (f.equals(file)) {
+            String hash = Utils.sha1(Utils.readContentsAsString(f) + fileName);
+            if (hash.equals(Utils.readContentsAsString(file))) {
                 return true;
             }
         }
@@ -69,7 +71,7 @@ public class Add  {
             //System.out.println("Blobs is null");
             return false;
         }
-        return map.containsValue(Utils.sha1((Object) Utils.readContents(fileToStage)));
+        return map.containsValue(Utils.sha1(Utils.readContentsAsString(fileToStage) + fileName));
     }
 
     /** Remove a file from staging for addition area */
