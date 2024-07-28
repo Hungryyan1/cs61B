@@ -101,6 +101,10 @@ public class Checkout {
 
     public static void checkoutByCommitID(String commitID) {
         Commit commit = Commit.findCommit(commitID);
+        if (commit == null) {
+            System.out.println("No commit with that id exists.");
+            System.exit(0);
+        }
         TreeMap<String, String> blobs = commit.getBlobs();
         List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
         if (workingFiles != null) {
