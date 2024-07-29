@@ -109,31 +109,30 @@ public class Checkout {
             System.exit(0);
         }
         TreeMap<String, String> branchBlobs = branchCommit.getBlobs();
-        List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
-        if (workingFiles != null) {
-            for (String fileName : workingFiles) {
-                if (branchBlobs.containsKey(fileName) && !headBlobs.containsKey(fileName)) {
-                    System.out.println("There is an untracked file in the way; " +
-                            "delete it, or add and commit it first.");
-                    System.exit(0);
+        if (branchBlobs != null) { // otherwise, no overwritten need to be done
+            List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
+            if (workingFiles != null) {
+                for (String fileName : workingFiles) {
+                    if (headBlobs == null || (branchBlobs.containsKey(fileName) && !headBlobs.containsKey(fileName))) {
+                        System.out.println("There is an untracked file in the way; " +
+                                "delete it, or add and commit it first.");
+                        System.exit(0);
+                    }
+                    // To this point, every file in the CWD is tracked by the current commit.
+                    // Any files that are tracked in the current branch
+                    // but are not present in the checked-out branch are deleted.
+                    if (headBlobs.containsKey(fileName) && !branchBlobs.containsKey(fileName)) {
+                        File fileToDelete = Utils.join(Repository.CWD, fileName);
+                        fileToDelete.delete();
+                    }
                 }
             }
-        }
-        // To this point, every file in the CWD is tracked by the current commit.
-        // Any files that are tracked in the current branch
-        // but are not present in the checked-out branch are deleted.
-        if (workingFiles != null) {
-            for (String fileName : workingFiles) {
-                if (headBlobs.containsKey(fileName) && !branchBlobs.containsKey(fileName)) {
-                    File fileToDelete = Utils.join(Repository.CWD, fileName);
-                    fileToDelete.delete();
-                }
+            // deal with each file
+            for (String fileName : branchBlobs.keySet()) {
+                checkoutFileInCommit(branchCommitID, fileName);
             }
         }
-        // deal with each file
-        for (String fileName : branchBlobs.keySet()) {
-            checkoutFileInCommit(branchCommitID, fileName);
-        }
+
 
         Add.clearStagingArea();
     }
