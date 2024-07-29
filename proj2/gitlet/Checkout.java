@@ -95,7 +95,10 @@ public class Checkout {
         // If a working file is untracked in the current
         // branch and would be overwritten by the checkout
         String branchCommitID = Utils.readContentsAsString(branchHead);
+        //the given branch will now be considered the current branch (HEAD)
         checkoutByCommitID(branchCommitID);
+
+
 
     }
 
@@ -132,8 +135,7 @@ public class Checkout {
                 checkoutFileInCommit(branchCommitID, fileName);
             }
         }
-
-
+        branchCommit.makeHead();
         Add.clearStagingArea();
     }
 }
