@@ -136,6 +136,7 @@ public class Checkout {
             }
         }
         branchCommit.makeHead();
+        branchCommit.makeBranchHead(branchCommitID);
         Add.clearStagingArea();
     }
 }
