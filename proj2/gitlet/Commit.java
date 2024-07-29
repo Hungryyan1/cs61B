@@ -118,6 +118,11 @@ public class Commit implements Serializable {
         Utils.writeContents(branchFile, commitId);
     }
 
+    /** Set to the given branch */
+    public void setBranch(String BranchName) {
+        branch = BranchName;
+    }
+
     /** Get the Head pointer of the given branch as the parent commit */
     public static String getHead() {
         File headFile = Utils.join(Repository.GITLET_DIR,"Heads", "head");

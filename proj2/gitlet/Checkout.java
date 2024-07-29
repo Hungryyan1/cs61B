@@ -97,7 +97,10 @@ public class Checkout {
         String branchCommitID = Utils.readContentsAsString(branchHead);
         //the given branch will now be considered the current branch (HEAD)
         checkoutByCommitID(branchCommitID);
-
+        Commit branchCommit = Commit.findCommit(branchCommitID);
+        branchCommit.makeHead();
+        branchCommit.makeBranchHead(branchCommitID);
+        branchCommit.setBranch(branchName);
 
 
     }
@@ -135,8 +138,7 @@ public class Checkout {
                 checkoutFileInCommit(branchCommitID, fileName);
             }
         }
-        branchCommit.makeHead();
-        branchCommit.makeBranchHead(branchCommitID);
+
         Add.clearStagingArea();
     }
 }

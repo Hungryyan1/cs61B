@@ -214,6 +214,7 @@ public class Repository {
         Checkout.checkoutByCommitID(commitID);
         Commit commit = Commit.findCommit(commitID);
         commit.makeHead();
+        
     }
 
 }
