@@ -96,7 +96,7 @@ public class Repository {
         // (see gitlet rm), if it was at the time of the command.
         if (Remove.isStagedForRemoval(fileName)){
             Add.removeRemovalFromStage(fileName);
-            Checkout.checkoutFile(fileName);
+            //Checkout.checkoutFile(fileName);
         }
 
         if (!fileToStage.exists()) {
