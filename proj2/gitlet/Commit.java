@@ -3,6 +3,7 @@ package gitlet;
 // TODO: any imports you need here
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -89,10 +90,14 @@ public class Commit implements Serializable {
      *  In other words, we use the file directory to represent branch info.
      * */
     public void makeHead(String branchName) {
-        File headFile = Utils.join(Repository.HEADS_FOLDER, branchName);
-        if (headFile.exists()) {
-            headFile.delete();
+        List<String> headFiles = Utils.plainFilenamesIn(Repository.HEADS_FOLDER);
+        if (headFiles != null) {
+            for (String file : headFiles) {
+                File fileToDelete = Utils.join(Repository.HEADS_FOLDER, file);
+                fileToDelete.delete();
+            }
         }
+        File headFile = Utils.join(Repository.HEADS_FOLDER, branchName);
         try {
             headFile.createNewFile();
         } catch (IOException e) {
