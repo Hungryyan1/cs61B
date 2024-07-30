@@ -214,7 +214,8 @@ public class Repository {
         Checkout.checkoutByCommitID(commitID);
         Commit commit = Commit.findCommit(commitID);
         commit.makeHead();
-
+        commit.makeBranchHead(commit.getBranch());
+        commit.writeCommit();
     }
 
 }
