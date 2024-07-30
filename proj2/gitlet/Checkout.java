@@ -99,10 +99,10 @@ public class Checkout {
         checkoutByCommitID(branchCommitID);
         Commit branchCommit = Commit.findCommit(branchCommitID);
         branchCommit.makeHead();
-        branchCommit.makeBranchHead(branchCommitID);
+        branchCommit.makeBranchHead(branchName);
         branchCommit.setBranch(branchName);
-
-
+        // save the result we made
+        branchCommit.writeCommit();
     }
 
     public static void checkoutByCommitID(String branchCommitID) {

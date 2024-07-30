@@ -156,7 +156,7 @@ public class Repository {
             // Copy the file from staging area to the object folder
             Add.copyFile(fileStaged, fileToCommit);
         }
-
+        // TODO: how to change the branch here
         Commit newCommit = new Commit(message, blobsTree, parent, parentCommit.getBranch());
         newCommit.makeHead();
         newCommit.makeBranchHead(newCommit.getBranch());
@@ -214,7 +214,7 @@ public class Repository {
         Checkout.checkoutByCommitID(commitID);
         Commit commit = Commit.findCommit(commitID);
         commit.makeHead();
-        
+
     }
 
 }

@@ -136,6 +136,9 @@ public class Commit implements Serializable {
             COMMIT_FOLDER.mkdir();
         }
         File file = Utils.join(COMMIT_FOLDER, commitId);
+        if (file.exists()){
+            file.delete();
+        }
         Utils.writeObject(file, this);
     }
 
