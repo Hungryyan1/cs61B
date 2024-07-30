@@ -20,13 +20,13 @@ public class Init {
     public static void setGitlet() throws IOException {
         if (!GITLET_FOLDER.exists()) {
             GITLET_FOLDER.mkdir();
-            Commit firstCommit = new Commit("initial commit", null, null, "master");
+            Commit firstCommit = new Commit("initial commit", null, null);
             Repository.createHeadFolder();
             Repository.createBranchFolder();
             Repository.createObjectFolder();
             firstCommit.writeCommit();
-            firstCommit.makeBranchHead(firstCommit.getBranch());
-            firstCommit.makeHead();
+            firstCommit.makeBranchHead("master");
+            firstCommit.makeHead("master");
         } else {
             System.out.println("A Gitlet version-control system" +
                     " already exists in the current directory.");

@@ -83,8 +83,7 @@ public class Checkout {
             System.exit(0);
         }
         String head = Commit.getHead();
-        Commit headCommit = Commit.findCommit(head);
-        if (branchName.equals(headCommit.getBranch())) {
+        if (branchName.equals(Commit.getCurrentBranch())) {
             System.out.println("No need to checkout the current branch.");
             System.exit(0);
         }
@@ -94,11 +93,9 @@ public class Checkout {
         //the given branch will now be considered the current branch (HEAD)
         checkoutByCommitID(branchCommitID);
         Commit branchCommit = Commit.findCommit(branchCommitID);
-        branchCommit.makeHead();
+        branchCommit.makeHead(branchName);
         branchCommit.makeBranchHead(branchName);
-        branchCommit.setBranch(branchName);
-        // save the result we made
-        branchCommit.writeCommit();
+        // Delete the previous save results
     }
 
     public static void checkoutByCommitID(String branchCommitID) {

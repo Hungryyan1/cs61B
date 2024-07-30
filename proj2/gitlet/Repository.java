@@ -156,9 +156,9 @@ public class Repository {
             // Copy the file from staging area to the object folder
             Add.copyFile(fileStaged, fileToCommit);
         }
-        Commit newCommit = new Commit(message, blobsTree, parent, parentCommit.getBranch());
-        newCommit.makeHead();
-        newCommit.makeBranchHead(newCommit.getBranch());
+        Commit newCommit = new Commit(message, blobsTree, parent);
+        newCommit.makeHead(Commit.getCurrentBranch());
+        newCommit.makeBranchHead(Commit.getCurrentBranch());
         newCommit.writeCommit();
 
         // clear the staging area after a commit
@@ -212,9 +212,8 @@ public class Repository {
     public static void reset(String commitID) {
         Checkout.checkoutByCommitID(commitID);
         Commit commit = Commit.findCommit(commitID);
-        //String currentBranch = commit.getBranch();
-        commit.makeHead();
-        commit.makeBranchHead(commit.getBranch());
+        commit.makeHead(Commit.getCurrentBranch());
+        commit.makeBranchHead(Commit.getCurrentBranch());
     }
 
 }

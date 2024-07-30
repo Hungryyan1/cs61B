@@ -11,9 +11,7 @@ package gitlet;
 public class Status {
     public static void printBranch() {
         System.out.println("===" + " " + "Branches" + " " + "===");
-        String head = Commit.getHead();
-        Commit commit = Commit.findCommit(head);
-        String currentBranch = commit.getBranch();
+        String currentBranch = Commit.getCurrentBranch();
         System.out.println("*" + currentBranch);
         // print other branches
         for (String branch : Utils.plainFilenamesIn(Repository.BRANCHES_FOLDER)) {

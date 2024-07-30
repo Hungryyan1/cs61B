@@ -3,6 +3,7 @@ package gitlet;
 // TODO: any imports you need here
 
 import java.io.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -35,7 +36,6 @@ public class Commit implements Serializable {
     /** SHA-1 Hash for the current commit */
     private String commitId;
     /** Record the current branch the commit at */
-    private String branch;
     /* TODO: fill in the rest of this class. */
 
 
@@ -59,8 +59,7 @@ public class Commit implements Serializable {
 
     public TreeMap<String, String> getBlobs() {return blobs;}
 
-    public String getBranch() { return branch; }
-    public Commit(String message,  TreeMap<String, String> blobs, String parent, String branch) {
+    public Commit(String message,  TreeMap<String, String> blobs, String parent) {
         if (Objects.equals(message, "initial commit")){
             this.timestamp = GetDate.getDate0();
 
@@ -70,7 +69,6 @@ public class Commit implements Serializable {
         this.message = message;
         this.blobs = blobs;
         this.parent = parent;
-        this.branch = branch;
         this.commitId = createCommitID();
         this.secondParent = null;
     }
@@ -90,8 +88,8 @@ public class Commit implements Serializable {
      *                        /head
      *  In other words, we use the file directory to represent branch info.
      * */
-    public void makeHead() {
-        File headFile = Utils.join(Repository.HEADS_FOLDER, "head");
+    public void makeHead(String branchName) {
+        File headFile = Utils.join(Repository.HEADS_FOLDER, branchName);
         if (headFile.exists()) {
             headFile.delete();
         }
@@ -118,15 +116,22 @@ public class Commit implements Serializable {
         Utils.writeContents(branchFile, commitId);
     }
 
-    /** Set to the given branch */
-    public void setBranch(String BranchName) {
-        branch = BranchName;
-    }
-
     /** Get the Head pointer of the given branch as the parent commit */
     public static String getHead() {
-        File headFile = Utils.join(Repository.GITLET_DIR,"Heads", "head");
-        return Utils.readContentsAsString(headFile);
+        File headFile = Utils.join(Repository.GITLET_DIR,"Heads");
+        List<String> headBranchNames = Utils.plainFilenamesIn(headFile);
+        // only one file should be in above
+        String headBranch = headBranchNames.get(0);
+        File head = Utils.join(Repository.HEADS_FOLDER, headBranch);
+        return Utils.readContentsAsString(head);
+    }
+
+    /** return the name of the current branch */
+    public static String getCurrentBranch() {
+        File headFile = Utils.join(Repository.GITLET_DIR,"Heads");
+        List<String> headBranchNames = Utils.plainFilenamesIn(headFile);
+        // only one file should be in above
+        return headBranchNames.get(0);
     }
 
     /** Make persistence. Save Commit Object in object/Commits folder*/

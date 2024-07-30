@@ -44,9 +44,7 @@ public class Branch {
             System.out.println("A branch with that name does not exist.");
             System.exit(0);
         }
-        String head = Commit.getHead();
-        Commit commit = Commit.findCommit(head);
-        if (branchName.equals(commit.getBranch())) {
+        if (branchName.equals(Commit.getCurrentBranch())) {
             System.out.println("Cannot remove the current branch.");
             System.exit(0);
         }
@@ -55,4 +53,5 @@ public class Branch {
             branchFile.delete();
         }
     }
+
 }
