@@ -49,11 +49,7 @@ public class Checkout {
             System.exit(0);
         }
         TreeMap<String, String> blobs = commit.getBlobs();
-        if (blobs == null) {
-            System.out.println("File does not exist in that commit.");
-            System.exit(0);
-        }
-        if (!blobs.containsKey(fileName)) {
+        if (!isFileTracked(fileName, blobs)){
             System.out.println("File does not exist in that commit.");
             System.exit(0);
         }
@@ -115,30 +111,54 @@ public class Checkout {
             System.exit(0);
         }
         TreeMap<String, String> branchBlobs = branchCommit.getBlobs();
-        if (branchBlobs != null) { // otherwise, no overwritten need to be done
-            List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
-            if (workingFiles != null) {
-                for (String fileName : workingFiles) {
-                    if (headBlobs == null || (branchBlobs.containsKey(fileName) && !headBlobs.containsKey(fileName))) {
-                        System.out.println("There is an untracked file in the way; " +
-                                "delete it, or add and commit it first.");
-                        System.exit(0);
-                    }
-                    // To this point, every file in the CWD is tracked by the current commit.
-                    // Any files that are tracked in the current branch
-                    // but are not present in the checked-out branch are deleted.
-                    if (headBlobs.containsKey(fileName) && !branchBlobs.containsKey(fileName)) {
-                        File fileToDelete = Utils.join(Repository.CWD, fileName);
-                        fileToDelete.delete();
-                    }
+        List<String> workingFiles = Utils.plainFilenamesIn(Repository.CWD);
+        if (workingFiles != null) {
+            for (String fileName : workingFiles) {
+                if (!isFileTracked(fileName, headBlobs) && isToOverwrite(fileName, branchBlobs)) {
+                    System.out.println("There is an untracked file in the way; " +
+                            "delete it, or add and commit it first.");
+                    System.exit(0);
                 }
             }
-            // deal with each file
+        }
+
+        // starting delete or overwrite
+        if (workingFiles == null) { // no need to delete
+            for (String fileName : branchBlobs.keySet()) {
+                checkoutFileInCommit(branchCommitID, fileName);
+            }
+        } else {
+            for (String fileName: Utils.plainFilenamesIn(Repository.CWD)) {
+                if (isFileTracked(fileName, headBlobs) && !isFileTracked(fileName, branchBlobs)) {
+                    File fileToDelete = Utils.join(Repository.CWD, fileName);
+                    fileToDelete.delete();
+                }
+            }
             for (String fileName : branchBlobs.keySet()) {
                 checkoutFileInCommit(branchCommitID, fileName);
             }
         }
 
         Add.clearStagingArea();
+    }
+
+    /** Return true if the file is tracked in the current blobs */
+    public static boolean isFileTracked(String fileName, TreeMap<String, String> blobs) {
+        if (blobs == null) {
+            return false;
+        }
+        return blobs.containsKey(fileName);
+    }
+
+    /** Return true if the file in the CWD will be overwritten by the blobs.
+     *  Just need to check if they have the same version. */
+    public static boolean isToOverwrite(String fileName, TreeMap<String, String> blobs) {
+        if (!isFileTracked(fileName, blobs)) {
+            return false;
+        }
+        File file = Utils.join(Repository.CWD, fileName);
+        String fileNameHash = Utils.sha1(Utils.readContentsAsString(file) + fileName);
+        String blobFileHash = blobs.get(fileName);
+        return !fileNameHash.equals(blobFileHash);
     }
 }
