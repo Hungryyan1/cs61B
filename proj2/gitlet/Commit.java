@@ -35,6 +35,7 @@ public class Commit implements Serializable {
     /** SHA-1 Hash for the current commit */
     private String commitId;
     /** Record the current branch the commit at */
+    private String branch;
     /* TODO: fill in the rest of this class. */
 
 
@@ -58,7 +59,8 @@ public class Commit implements Serializable {
 
     public TreeMap<String, String> getBlobs() {return blobs;}
 
-    public Commit(String message,  TreeMap<String, String> blobs, String parent) {
+    public String getBranch() { return branch; }
+    public Commit(String message,  TreeMap<String, String> blobs, String parent, String branch) {
         if (Objects.equals(message, "initial commit")){
             this.timestamp = GetDate.getDate0();
 
@@ -68,6 +70,7 @@ public class Commit implements Serializable {
         this.message = message;
         this.blobs = blobs;
         this.parent = parent;
+        this.branch = branch;
         this.commitId = createCommitID();
         this.secondParent = null;
     }
@@ -113,6 +116,11 @@ public class Commit implements Serializable {
             throw new RuntimeException(e);
         }
         Utils.writeContents(branchFile, commitId);
+    }
+
+    /** Set to the given branch */
+    public void setBranch(String BranchName) {
+        branch = BranchName;
     }
 
     /** Get the Head pointer of the given branch as the parent commit */
