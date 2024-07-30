@@ -134,6 +134,9 @@ public class Checkout {
                     fileToDelete.delete();
                 }
             }
+            if (branchBlobs == null) {
+                return;
+            }
             for (String fileName : branchBlobs.keySet()) {
                 checkoutFileInCommit(branchCommitID, fileName);
             }
