@@ -93,7 +93,7 @@ public class Merge {
                     // case 6
                     if (!isModifiedIn(splitPoint, head, fileName)) {
                         Remove.remove(fileName); // remove the file
-                        untracked(head, fileName);
+                        //untracked(head, fileName);
                         continue;
                     }
                 }
