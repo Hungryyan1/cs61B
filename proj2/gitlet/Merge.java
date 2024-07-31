@@ -88,43 +88,40 @@ public class Merge {
                 } else if (existsIn(head, fileName) && !existsIn(branchHead, fileName)) {
                     continue; // case 4
                 }
-            } else { // file exists in splitPoint
-                if (!existsIn(branchHead, fileName) && existsIn(head, fileName)) {
-                    // case 6
-                    if (!isModifiedIn(splitPoint, head, fileName)) {
-                        Remove.remove(fileName); // remove the file
-                        //untracked(head, fileName);
-                        continue;
-                    }
-                }
-                if (!existsIn(head, fileName) && existsIn(branchHead, fileName)) {
-                    // case 7
-                    if (!isModifiedIn(splitPoint, branchHead, fileName)) {
-                        continue;
-                    }
-                }
-                if (isModifiedIn(splitPoint, branchHead, fileName) && !isModifiedIn(splitPoint, head, fileName)) {
-                    //case 1
-                    Checkout.checkoutFileInCommit(branchHead, fileName);
-                    Repository.add(fileName);
-                    continue;
-                }
-                if (isModifiedIn(splitPoint, head, fileName) && !isModifiedIn(splitPoint, branchHead, fileName)) {
-                    //case 2
-                    continue;
-                }
-                if (isModifiedIn(splitPoint, branchHead, fileName) && isModifiedIn(splitPoint, head, fileName)) {
-                    // case 3 and 8
-                    if (isFileSameInCommits(branchHead, head, fileName)) {
-                        continue;
-                    } else {
-                        // TODO: deal with conflicts
-                        isConflict = true;
-                        dealWithConflict(fileName, branchHead, head);
-                    }
-                }
+            }
+
+            if (!isModifiedIn(splitPoint, head, fileName) && !existsIn(branchHead, fileName)) {
+                // case 6
+                Remove.remove(fileName); // remove the file
+                continue;
 
             }
+            if (!existsIn(head, fileName) && !isModifiedIn(splitPoint, branch, fileName)) {
+                // case 7
+                continue;
+
+            }
+            if (isModifiedIn(splitPoint, branchHead, fileName) && !isModifiedIn(splitPoint, head, fileName)) {
+                //case 1
+                Checkout.checkoutFileInCommit(branchHead, fileName);
+                Repository.add(fileName);
+                continue;
+            }
+            if (isModifiedIn(splitPoint, head, fileName) && !isModifiedIn(splitPoint, branchHead, fileName)) {
+                //case 2
+                continue;
+            }
+            if (isModifiedIn(splitPoint, branchHead, fileName) && isModifiedIn(splitPoint, head, fileName)) {
+                // case 3 and 8
+                if (isFileSameInCommits(branchHead, head, fileName)) {
+                    continue;
+                } else {
+                    // TODO: deal with conflicts
+                    isConflict = true;
+                    dealWithConflict(fileName, branchHead, head);
+                }
+            }
+
         }
         Repository.commit("Merged " + branch + " into " + currentBranch + ".");
         String newHead = Commit.getHead();
