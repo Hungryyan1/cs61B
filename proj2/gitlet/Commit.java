@@ -58,6 +58,8 @@ public class Commit implements Serializable {
 
     public String getSecondParent() { return secondParent; }
 
+    public void setSecondParent(String secondParent) { this.secondParent = secondParent; }
+
     public TreeMap<String, String> getBlobs() {return blobs;}
 
     public Commit(String message,  TreeMap<String, String> blobs, String parent) {

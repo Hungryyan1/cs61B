@@ -166,7 +166,7 @@ public class Repository {
     }
 
     /** run rm */
-    public static void remove(String fileName) throws IOException {
+    public static void remove(String fileName) {
         Remove.remove(fileName);
     }
 
