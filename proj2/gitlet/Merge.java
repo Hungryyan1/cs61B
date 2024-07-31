@@ -52,14 +52,15 @@ public class Merge {
         Commit headCommit = Commit.findCommit(head);
         String parent = headCommit.getParent();
         List<String> ancestors = new LinkedList<>();
-        while (true) {
+        if (parent == null) {
+            ancestors.add(headCommit.getCommitId());
+            return ancestors;
+        }
+        do {
             ancestors.add(0, headCommit.getCommitId());
             headCommit = Commit.findCommit(parent);
             parent = headCommit.getParent();
-            if (parent == null) {
-                break;
-            }
-        }
+        } while (parent != null);
         return ancestors;
     }
 
