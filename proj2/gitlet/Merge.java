@@ -198,7 +198,7 @@ public class Merge {
      *         the version in split commit
      */
     private static boolean isModifiedIn(String splitID, String branchID , String fileName) {
-        return isFileSameInCommits(splitID, branchID, fileName);
+        return !isFileSameInCommits(splitID, branchID, fileName);
     }
 
     /**
