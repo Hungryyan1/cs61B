@@ -108,11 +108,17 @@ public class Add  {
 
     /** If stage for addition is empty*/
     public static boolean isStageEmpty() {
-        if (Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER) == null
-                && Utils.plainFilenamesIn(Repository.STAGING_REMOVAL_FOLDER) == null) {
+        List<String> addFiles = Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER);
+        List<String> rmFiles = Utils.plainFilenamesIn(Repository.STAGING_REMOVAL_FOLDER);
+        if (addFiles == null && rmFiles == null) {
             return true;
         }
-        return Utils.plainFilenamesIn(Repository.STAGING_ADDITION_FOLDER).isEmpty()
-                && Utils.plainFilenamesIn(Repository.STAGING_REMOVAL_FOLDER).isEmpty();
+        if (addFiles == null) {
+            return rmFiles.isEmpty();
+        }
+        if (rmFiles == null) {
+            return addFiles.isEmpty();
+        }
+        return rmFiles.isEmpty() && addFiles.isEmpty();
     }
 }

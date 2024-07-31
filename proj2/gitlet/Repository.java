@@ -140,22 +140,38 @@ public class Repository {
         TreeMap<String, String> blobsTree = parentCommit.getBlobs();
 
         // iterate through the staging area to change the blobs in the parent commit.
-        for (String fileName : Utils.plainFilenamesIn(STAGING_ADDITION_FOLDER)) {
-            if (blobsTree != null && blobsTree.containsKey(fileName)) {
-                blobsTree.remove(fileName);
-            }
-            File fileStaged =Utils.join(STAGING_ADDITION_FOLDER, fileName);
-            String hash = Utils.sha1(Utils.readContentsAsString(fileStaged) + fileName);
-            File fileToCommit = Utils.join(OBJECT_FOLDER, hash);
 
-            // put the new blobs in the tree map
-            if (blobsTree == null) {
-                blobsTree = new TreeMap<>();
+        List<String> addFiles = Utils.plainFilenamesIn(STAGING_ADDITION_FOLDER);
+        List<String> rmFiles = Utils.plainFilenamesIn(STAGING_REMOVAL_FOLDER);
+        if (addFiles != null) {
+            for (String fileName : addFiles) {
+                if (blobsTree != null && blobsTree.containsKey(fileName)) {
+                    blobsTree.remove(fileName);
+                }
+                File fileStaged =Utils.join(STAGING_ADDITION_FOLDER, fileName);
+                String hash = Utils.sha1(Utils.readContentsAsString(fileStaged) + fileName);
+                File fileToCommit = Utils.join(OBJECT_FOLDER, hash);
+
+                // put the new blobs in the tree map
+                if (blobsTree == null) {
+                    blobsTree = new TreeMap<>();
+                }
+                blobsTree.put(fileName, hash);
+                // Copy the file from staging area to the object folder
+                if (fileToCommit.exists()) {
+                    fileToCommit.delete();
+                }
+                Add.copyFile(fileStaged, fileToCommit);
             }
-            blobsTree.put(fileName, hash);
-            // Copy the file from staging area to the object folder
-            Add.copyFile(fileStaged, fileToCommit);
         }
+        if (rmFiles != null) {
+            for (String fileName : rmFiles) {
+                if (blobsTree != null && blobsTree.containsKey(fileName)) {
+                    blobsTree.remove(fileName);
+                }
+            }
+        }
+
         Commit newCommit = new Commit(message, blobsTree, parent);
         newCommit.makeHead(Commit.getCurrentBranch());
         newCommit.makeBranchHead(Commit.getCurrentBranch());

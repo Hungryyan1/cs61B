@@ -41,6 +41,7 @@ public class Merge {
         while (branchAncestors.get(i).equals(currentAncestors.get(i))) {
             i++;
         }
+        //System.out.println("split point: " + branchAncestors.get(i-1));
         return branchAncestors.get(i - 1);
     }
 
