@@ -43,11 +43,7 @@ public class Main {
                 checkGitlet();
                 validateNumArgs(args, 2);
                 String fileToRemove = args[1];
-                try {
-                    Repository.remove(fileToRemove);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                Repository.remove(fileToRemove);
                 break;
             case "log":
                 checkGitlet();
@@ -96,6 +92,11 @@ public class Main {
                 checkGitlet();
                 validateNumArgs(args, 2);
                 Repository.reset(args[1]);
+                break;
+            case "merge":
+                checkGitlet();
+                validateNumArgs(args, 2);
+                Merge.merge(args[1]);
                 break;
             default:
             System.out.println("No command with that name exists.");
