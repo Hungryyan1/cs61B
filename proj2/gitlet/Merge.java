@@ -96,7 +96,7 @@ public class Merge {
                 continue;
 
             }
-            if (!existsIn(head, fileName) && !isModifiedIn(splitPoint, branch, fileName)) {
+            if (!existsIn(head, fileName) && !isModifiedIn(splitPoint, branchHead, fileName)) {
                 // case 7
                 continue;
 
@@ -192,13 +192,13 @@ public class Merge {
 
     /**
      * @param splitID  the ID of the split point
-     * @param branchName the given branch name
+     * @param branchID the given branch head ID
      * @param fileName the name of the given file
      * @return return true if the given file in the given branch head if modified from
      *         the version in split commit
      */
-    private static boolean isModifiedIn(String splitID, String branchName , String fileName) {
-        return isFileSameInCommits(splitID, branchName, fileName);
+    private static boolean isModifiedIn(String splitID, String branchID , String fileName) {
+        return isFileSameInCommits(splitID, branchID, fileName);
     }
 
     /**
