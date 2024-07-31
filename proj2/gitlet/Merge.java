@@ -50,11 +50,15 @@ public class Merge {
      */
     private static List<String> ancestors(String head) {
         Commit headCommit = Commit.findCommit(head);
+        String parent = headCommit.getParent();
         List<String> ancestors = new LinkedList<>();
-        while (headCommit != null) {
+        while (true) {
             ancestors.add(0, headCommit.getCommitId());
-            String parentID = headCommit.getParent();
-            headCommit = Commit.findCommit(parentID);
+            headCommit = Commit.findCommit(parent);
+            parent = headCommit.getParent();
+            if (parent == null) {
+                break;
+            }
         }
         return ancestors;
     }
