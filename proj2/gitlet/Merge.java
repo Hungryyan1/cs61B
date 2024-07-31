@@ -213,27 +213,21 @@ public class Merge {
         String headID = Commit.getHead();
         Commit headCommit = Commit.findCommit(headID);
         Commit branchCommit = Commit.findCommit(branchName);
-        TreeMap<String, String> headBlobs = headCommit.getBlobs();
-        TreeMap<String, String> branchBlobs = branchCommit.getBlobs();
-        TreeMap<String, String> splitBlobs = split.getBlobs();
-        if (headBlobs != null) {
-            for (String fileName : headBlobs.keySet()) {
-                if (!fileNames.contains(fileName)) {
-                    fileNames.add(fileName);
-                }
-            }
-        }
-        if (branchBlobs != null) {
-            for (String fileName : branchBlobs.keySet()) {
-                if (!fileNames.contains(fileName)) {
-                    fileNames.add(fileName);
-                }
-            }
-        }
-        if (splitBlobs != null) {
-            for (String fileName : splitBlobs.keySet()) {
-                if (!fileNames.contains(fileName)) {
-                    fileNames.add(fileName);
+
+        fileNames = FileNames(split, fileNames);
+        fileNames = FileNames(headCommit, fileNames);
+        fileNames = FileNames(branchCommit, fileNames);
+        
+        return fileNames;
+    }
+    private static List<String> FileNames(Commit commit, List<String> fileNames) {
+        if (commit != null) {
+            TreeMap<String, String> commitBlobs = commit.getBlobs();
+            if (commitBlobs != null) {
+                for (String fileName : commitBlobs.keySet()) {
+                    if(!fileNames.contains(fileName)) {
+                        fileNames.add(fileName);
+                    }
                 }
             }
         }
