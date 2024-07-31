@@ -126,7 +126,7 @@ public class Repository {
     /** Make a commit */
     public static void commit(String message) {
         // see if staging area is empty
-        if (Add.isStageEmpty()) {
+        if (Add.isStageEmpty() && !message.contains("Merged")) {
             System.out.println("No changes added to the commit.");
             System.exit(0);
         }

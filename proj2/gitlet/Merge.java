@@ -217,7 +217,7 @@ public class Merge {
         fileNames = FileNames(split, fileNames);
         fileNames = FileNames(headCommit, fileNames);
         fileNames = FileNames(branchCommit, fileNames);
-        
+
         return fileNames;
     }
     private static List<String> FileNames(Commit commit, List<String> fileNames) {
