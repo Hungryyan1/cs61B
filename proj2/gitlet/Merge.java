@@ -77,6 +77,7 @@ public class Merge {
         String branchHead = getBranchHead(branch);
 
         boolean isConflict = false;
+        //System.out.println("All files in this merge: " + allFileNames.toString());
 
         for (String fileName : allFileNames) {
             if (!existsIn(splitPoint, fileName)) {
@@ -214,10 +215,13 @@ public class Merge {
         Commit split = Commit.findCommit(splitID);
         String headID = Commit.getHead();
         Commit headCommit = Commit.findCommit(headID);
-        Commit branchCommit = Commit.findCommit(branchName);
+        String branchHead = getBranchHead(branchName);
+        Commit branchCommit = Commit.findCommit(branchHead);
 
         fileNames = FileNames(split, fileNames);
+        //System.out.println("Files in split: " + fileNames);
         fileNames = FileNames(headCommit, fileNames);
+        //System.out.println("Files in split and head" + fileNames);
         fileNames = FileNames(branchCommit, fileNames);
 
         return fileNames;
@@ -226,6 +230,7 @@ public class Merge {
         if (commit != null) {
             TreeMap<String, String> commitBlobs = commit.getBlobs();
             if (commitBlobs != null) {
+                //System.out.println("Keys are: "+ commitBlobs.keySet());
                 for (String fileName : commitBlobs.keySet()) {
                     if(!fileNames.contains(fileName)) {
                         fileNames.add(fileName);

@@ -171,7 +171,6 @@ public class Repository {
                 }
             }
         }
-
         Commit newCommit = new Commit(message, blobsTree, parent);
         newCommit.makeHead(Commit.getCurrentBranch());
         newCommit.makeBranchHead(Commit.getCurrentBranch());
