@@ -1,10 +1,7 @@
 package gitlet;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Merge {
     
@@ -53,9 +50,9 @@ public class Merge {
      */
     private static List<String> ancestors(String head) {
         Commit headCommit = Commit.findCommit(head);
-        List<String> ancestors = new ArrayList<>();
+        List<String> ancestors = new LinkedList<>();
         while (headCommit != null) {
-            ancestors.addFirst(headCommit.getCommitId());
+            ancestors.add(0, headCommit.getCommitId());
             String parentID = headCommit.getParent();
             headCommit = Commit.findCommit(parentID);
         }
