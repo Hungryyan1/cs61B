@@ -188,14 +188,14 @@ public class Merge {
         if (contentInHead == null) {
             contentConcatenated += "\n";
         } else {
-            contentConcatenated += contentInHead;
+            contentConcatenated += contentInHead.trim() + "\n";
         }
         contentConcatenated += "=======" + "\n";
         String contentInBranch = readContentsAsString(fileName, branchID);
         if (contentInBranch == null) {
             contentConcatenated += "\n";
         } else {
-            contentConcatenated += contentInBranch;
+            contentConcatenated += contentInBranch.trim() + "\n";
         }
         contentConcatenated += ">>>>>>>";
         File fileInCWD = Utils.join(Repository.CWD, fileName);
