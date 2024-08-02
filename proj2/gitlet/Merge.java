@@ -192,8 +192,8 @@ public class Merge {
         String contentInBranch = readContentsAsString(fileName, branchID);
         if (contentInBranch != null) {
             contentConcatenated += contentInBranch.trim() + "\n";
-        } 
-        contentConcatenated += ">>>>>>>";
+        }
+        contentConcatenated += ">>>>>>>\n";
         File fileInCWD = Utils.join(Repository.CWD, fileName);
         if (fileInCWD.exists()) {
             fileInCWD.delete();
