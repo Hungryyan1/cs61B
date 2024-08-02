@@ -24,10 +24,7 @@ public class Merge {
 
         TreeSet<String> branchAncestors = ancestors(branchCommit, null);
         TreeSet<String> currentAncestors = ancestors(headCommit, null);
-
-        System.out.println("Branch ancestors: " + branchAncestors);
-        System.out.println("Current ancestors: " + currentAncestors);
-
+        
         // Now the branch ancestors represent the common ancestors
         branchAncestors.retainAll(currentAncestors);
         for (String commonAncestor : branchAncestors) {
@@ -79,7 +76,6 @@ public class Merge {
         String currentHead = Commit.getHead();
         String branchHead = getBranchHead(branch);
         String splitPoint = splitPoint(branch);
-        System.out.println("Split point: " + splitPoint);
         if (branchHead == null) {
             System.out.println("A branch with that name does not exist.");
             System.exit(0);
