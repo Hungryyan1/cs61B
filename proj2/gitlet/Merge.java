@@ -153,28 +153,25 @@ public class Merge {
 
             //case 5: file only in the given branch
             if (existsIn(branchHead, fileName) && !existsIn(head, fileName) && !existsIn(splitID, head)) {
-                File fileInCWD = Utils.join(Repository.CWD, fileName);
-                if (fileInCWD.exists()) {
-                    if (Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
-                        System.out.println(fileName+" is not tracked");
-                        System.out.println("There is an untracked file in the way; delete it, or add and commit it first.2");
-                        System.exit(0);
-                    }
-                }
+                isToOverwrite(fileName, branchHeadBlobs);
             }
             if (isModifiedIn(splitID, branchHead, fileName) && !isModifiedIn(splitID, head, fileName)) {
                 if (!Checkout.isFileTracked(fileName, headBlobs)) {
                     // case 1
-                    File fileInCWD = Utils.join(Repository.CWD, fileName);
-                    if (fileInCWD.exists()) {
-                        if (Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
-                            System.out.println(fileName+" is not tracked");
-                            System.out.println("There is an untracked file in the way; delete it, or add and commit it first.1");
-                            System.exit(0);
-                        }
-                    }
+                    isToOverwrite(fileName, branchHeadBlobs);
 
                 }
+            }
+        }
+    }
+
+    /** Helper method for above */
+    private static void isToOverwrite(String fileName, TreeMap<String, String> branchHeadBlobs) {
+        File fileInCWD = Utils.join(Repository.CWD, fileName);
+        if (fileInCWD.exists()) {
+            if (Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
+                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.exit(0);
             }
         }
     }
