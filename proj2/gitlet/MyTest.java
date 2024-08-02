@@ -14,5 +14,6 @@ public class MyTest {
         System.out.println();
         String s = "";
         System.out.println(s.isBlank());
+        System.out.println("Hello World" + null);
     }
 }

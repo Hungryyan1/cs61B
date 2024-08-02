@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Merge {
@@ -116,7 +117,6 @@ public class Merge {
                 if (isFileSameInCommits(branchHead, head, fileName)) {
                     continue;
                 } else {
-                    // TODO: deal with conflicts
                     isConflict = true;
                     dealWithConflict(fileName, branchHead, head);
                 }
@@ -133,8 +133,62 @@ public class Merge {
         }
     }
 
+    /**
+     * Deal with the conflicts in two files according to the spec.
+     * @param fileName the name of the file
+     * @param branchID the ID of the branch head
+     * @param headID the ID of the current head
+     */
     private static void dealWithConflict(String fileName, String branchID, String headID) {
-        return;
+        String contentInHead = readContentsAsString(fileName, headID);
+        String contentConcatenated = "<<<<<<< HEAD" + "\n";
+        if (contentInHead == null) {
+            contentConcatenated += "\n";
+        } else {
+            contentConcatenated += contentInHead;
+        }
+        contentConcatenated += "=======";
+        String contentInBranch = readContentsAsString(branchID, headID);
+        if (contentInBranch == null) {
+            contentConcatenated += "\n";
+        } else {
+            contentConcatenated += contentInBranch;
+        }
+        contentConcatenated += ">>>>>>>";
+        File fileInCWD = Utils.join(Repository.CWD, fileName);
+        if (fileInCWD.exists()) {
+            fileInCWD.delete();
+        }
+        try {
+            fileInCWD.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Utils.writeContents(fileInCWD, contentConcatenated);
+        Repository.add(fileName);
+    }
+
+    /**
+     * @param fileName the name of the file
+     * @param headID the ID of the head
+     * @return the String contents in the file, if the file doesn't exist, return null;
+     */
+    private static String readContentsAsString(String fileName, String headID) {
+        Commit commit = Commit.findCommit(headID);
+        if (commit == null) {
+            return null;
+        }
+        TreeMap<String, String> blobs = commit.getBlobs();
+        if (blobs == null) {
+            return null;
+        }
+        if (!blobs.containsKey(fileName)) {
+            return null;
+        } else {
+            String fileID = blobs.get(fileName);
+            File file = Utils.join(Repository.OBJECT_FOLDER, fileID);
+            return Utils.readContentsAsString(file);
+        }
     }
 
     /** Return true if the files in the two commits are identical. */
@@ -163,16 +217,6 @@ public class Merge {
             String otherFile = otherBlobs.get(fileName);
             return headFile.equals(otherFile);
         }
-    }
-
-    /** Make the file untracked in the given branchHead. */
-    private static void untracked(String branchHead, String fileName) {
-        Commit commit = Commit.findCommit(branchHead);
-        TreeMap<String, String> blobs = commit.getBlobs();
-        if (blobs != null && blobs.containsKey(fileName)) {
-            blobs.remove(fileName);
-        }
-        commit.writeCommit();
     }
 
     /**
