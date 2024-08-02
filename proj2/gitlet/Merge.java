@@ -184,7 +184,7 @@ public class Merge {
             contentConcatenated += contentInBranch;
         }
         contentConcatenated += ">>>>>>>";
-        File fileInCWD = Utils.join(Repository.CWD, "conflict1");
+        File fileInCWD = Utils.join(Repository.CWD, fileName);
         if (fileInCWD.exists()) {
             fileInCWD.delete();
         }
@@ -194,7 +194,7 @@ public class Merge {
             throw new RuntimeException(e);
         }
         Utils.writeContents(fileInCWD, contentConcatenated);
-        Repository.add("conflict1");
+        Repository.add(fileName);
     }
 
     /**
