@@ -15,5 +15,6 @@ public class MyTest {
         String s = "";
         System.out.println(s.isBlank());
         System.out.println("Hello World" + null);
+        System.out.println(Commit.findCommit(null));
     }
 }
