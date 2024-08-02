@@ -44,6 +44,9 @@ public class Merge {
             i++;
         }
         //System.out.println("split point: " + branchAncestors.get(i-1));
+        //System.out.println("branchAncestors:" + branchAncestors);
+        //System.out.println("currentAncestors:" + currentAncestors);
+        //System.out.println("i:" + i);
         return branchAncestors.get(i - 1);
     }
 
@@ -53,17 +56,13 @@ public class Merge {
      */
     private static List<String> ancestors(String head) {
         Commit headCommit = Commit.findCommit(head);
-        String parent = headCommit.getParent();
         List<String> ancestors = new LinkedList<>();
-        if (parent == null) {
-            ancestors.add(headCommit.getCommitId());
-            return ancestors;
-        }
-        do {
+        while (headCommit.getParent() != null) {
             ancestors.add(0, headCommit.getCommitId());
-            headCommit = Commit.findCommit(parent);
-            parent = headCommit.getParent();
-        } while (parent != null);
+            headCommit = Commit.findCommit(headCommit.getParent());
+        }
+        ancestors.add(0, headCommit.getCommitId());
+
         return ancestors;
     }
 
