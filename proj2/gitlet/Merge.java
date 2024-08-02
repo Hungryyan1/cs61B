@@ -79,11 +79,9 @@ public class Merge {
 
         boolean isConflict = false;
         //System.out.println("All files in this merge: " + allFileNames.toString());
-        if (Utils.plainFilenamesIn(Repository.CWD) != null) {
-            for (String fileName : Utils.plainFilenamesIn(Repository.CWD))
-                checkUntrackedFile(fileName, branchHead, head, splitPoint);
-        }
 
+        for (String fileName : allFileNames)
+            checkUntrackedFile(fileName, branchHead, head, splitPoint);
 
         for (String fileName : allFileNames) {
             if (!existsIn(splitPoint, fileName)) {
@@ -149,15 +147,34 @@ public class Merge {
         TreeMap<String, String> headBlobs = headCommit.getBlobs();
         Commit branchHeadCommit = Commit.findCommit(branchHead);
         TreeMap<String, String> branchHeadBlobs = branchHeadCommit.getBlobs();
-        if (!Checkout.isFileTracked(fileName, headBlobs)) { // if the file is not tracked
-            if (Checkout.isFileTracked(fileName, branchHeadBlobs) && Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                System.exit(0);
+        if (!Checkout.isFileTracked(fileName, headBlobs) && Checkout.isFileTracked(fileName, branchHeadBlobs)) {
+            // if the file is only tracked by other branch
+            // consider the two situation: is to delete? is to overwrite? case 1,5 in the spec
+
+            //case 5: file only in the given branch
+            if (existsIn(branchHead, fileName) && !existsIn(head, fileName) && !existsIn(splitID, head)) {
+                File fileInCWD = Utils.join(Repository.CWD, fileName);
+                if (fileInCWD.exists()) {
+                    if (Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
+                        System.out.println(fileName+" is not tracked");
+                        System.out.println("There is an untracked file in the way; delete it, or add and commit it first.2");
+                        System.exit(0);
+                    }
+                }
             }
-            if (!Checkout.isFileTracked(fileName, branchHeadBlobs) && !existsIn(branchHead, fileName)) {
-                // the case that the file will be deleted. case 6
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                System.exit(0);
+            if (isModifiedIn(splitID, branchHead, fileName) && !isModifiedIn(splitID, head, fileName)) {
+                if (!Checkout.isFileTracked(fileName, headBlobs)) {
+                    // case 1
+                    File fileInCWD = Utils.join(Repository.CWD, fileName);
+                    if (fileInCWD.exists()) {
+                        if (Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
+                            System.out.println(fileName+" is not tracked");
+                            System.out.println("There is an untracked file in the way; delete it, or add and commit it first.1");
+                            System.exit(0);
+                        }
+                    }
+
+                }
             }
         }
     }
