@@ -148,7 +148,7 @@ public class Merge {
             contentConcatenated += contentInHead;
         }
         contentConcatenated += "=======";
-        String contentInBranch = readContentsAsString(branchID, headID);
+        String contentInBranch = readContentsAsString(fileName, branchID);
         if (contentInBranch == null) {
             contentConcatenated += "\n";
         } else {
