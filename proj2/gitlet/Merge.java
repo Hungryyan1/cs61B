@@ -11,14 +11,14 @@ public class Merge {
         String currentBranch = Commit.getCurrentBranch();
         File branchHeadFile = Utils.join(Repository.BRANCHES_FOLDER, branch);
         if (!branchHeadFile.exists()) {
-            System.out.println("A branch with that name does not exist.");
-            System.exit(0);
-        }
-        if (currentHead.equals(currentBranch)) {
-            System.out.println("Cannot merge a branch with itself.");
-            System.exit(0);
+            return null;
         }
         return Utils.readContentsAsString(branchHeadFile);
+        if (!branchHeadFile.exists()) {
+
+        }
+
+
     }
     
     /** Return the ID of the split point of the current branch and the given branch.
@@ -26,6 +26,14 @@ public class Merge {
     private static String splitPoint(String branch) {
         String currentHead = Commit.getHead();
         String branchHead = getBranchHead(branch);
+        if (branchHead == null) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+        if (currentHead.equals(branchHead)) {
+            System.out.println("Cannot merge a branch with itself.");
+            System.exit(0);
+        }
         List<String> branchAncestors = ancestors(branchHead);
         List<String> currentAncestors = ancestors(currentHead);
         if (currentAncestors.contains(branchHead)) {
