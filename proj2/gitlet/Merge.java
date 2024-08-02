@@ -85,6 +85,10 @@ public class Merge {
             if (!existsIn(splitPoint, fileName)) {
                 if (!existsIn(head, fileName) && existsIn(branchHead, fileName)) {
                     //case 5
+                    if (!Checkout.isFileTracked(fileName, Commit.findCommit(head).getBlobs())) {
+                        System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                        System.exit(0);
+                    }
                     Checkout.checkoutFileInCommit(branchHead, fileName);
                     Repository.add(fileName);
                 } else if (existsIn(head, fileName) && !existsIn(branchHead, fileName)) {
@@ -94,6 +98,10 @@ public class Merge {
 
             if (!isModifiedIn(splitPoint, head, fileName) && !existsIn(branchHead, fileName)) {
                 // case 6
+                if (!Checkout.isFileTracked(fileName, Commit.findCommit(head).getBlobs())) {
+                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                    System.exit(0);
+                }
                 Remove.remove(fileName); // remove the file
                 continue;
 
