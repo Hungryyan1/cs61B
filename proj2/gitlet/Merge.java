@@ -80,6 +80,11 @@ public class Merge {
 
         boolean isConflict = false;
         //System.out.println("All files in this merge: " + allFileNames.toString());
+        if (Utils.plainFilenamesIn(Repository.CWD) != null) {
+            for (String fileName : Utils.plainFilenamesIn(Repository.CWD))
+                checkUntrackedFile(fileName, branchHead, head, splitPoint);
+        }
+
 
         for (String fileName : allFileNames) {
             if (!existsIn(splitPoint, fileName)) {
@@ -94,10 +99,6 @@ public class Merge {
 
             if (!isModifiedIn(splitPoint, head, fileName) && !existsIn(branchHead, fileName)) {
                 // case 6
-                if (!Checkout.isFileTracked(fileName, Commit.findCommit(head).getBlobs())) {
-                    System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
-                    System.exit(0);
-                }
                 Remove.remove(fileName); // remove the file
                 continue;
 
@@ -135,6 +136,30 @@ public class Merge {
         newHeadCommit.writeCommit();
         if (isConflict) {
             System.out.println("Encountered a merge conflict.");
+        }
+    }
+
+    /**
+     * Check if the file in the CWD will be removed or overwritten, if so, print error message.
+     * @param fileName name of the file
+     * @param branchHead ID of the branch head
+     * @param head ID of current head
+     */
+    private static void checkUntrackedFile(String fileName, String branchHead, String head, String splitID) {
+        Commit headCommit = Commit.findCommit(head);
+        TreeMap<String, String> headBlobs = headCommit.getBlobs();
+        Commit branchHeadCommit = Commit.findCommit(branchHead);
+        TreeMap<String, String> branchHeadBlobs = branchHeadCommit.getBlobs();
+        if (!Checkout.isFileTracked(fileName, headBlobs)) { // if the file is not tracked
+            if (Checkout.isFileTracked(fileName, branchHeadBlobs) && Checkout.isToOverwrite(fileName, branchHeadBlobs)) {
+                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.exit(0);
+            }
+            if (!Checkout.isFileTracked(fileName, branchHeadBlobs) && !existsIn(branchHead, fileName)) {
+                // the case that the file will be deleted. case 6
+                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.exit(0);
+            }
         }
     }
 
