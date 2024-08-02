@@ -19,6 +19,61 @@ public class Merge {
     private static String splitPoint(String branch) {
         String currentHead = Commit.getHead();
         String branchHead = getBranchHead(branch);
+        Commit headCommit = Commit.findCommit(currentHead);
+        Commit branchCommit = Commit.findCommit(branchHead);
+
+        TreeSet<String> branchAncestors = ancestors(branchCommit, null);
+        TreeSet<String> currentAncestors = ancestors(headCommit, null);
+
+        // Now the branch ancestors represent the common ancestors
+        branchAncestors.retainAll(currentAncestors);
+        for (String commonAncestor : branchAncestors) {
+            for (String otherAncestor : currentAncestors) {
+                if (!commonAncestor.equals(otherAncestor) && firstIsAncestorOfSecond(otherAncestor, commonAncestor)) {
+                    branchAncestors.remove(otherAncestor);
+                }
+            }
+        }
+        return branchAncestors.first();
+    }
+
+    private static boolean firstIsAncestorOfSecond(String first, String second) {
+        TreeSet<String> secondAncestors = ancestors(Commit.findCommit(second), null);
+        return secondAncestors.contains(first);
+    }
+
+    /**
+     * @param headCommit the given (branch)head commit.
+     * @return Return a list of ancestors of the given head using recursion.
+     */
+    private static TreeSet<String> ancestors(Commit headCommit, TreeSet<String> ancestorsSet) {
+        if (ancestorsSet == null) {
+            ancestorsSet = new TreeSet<>();
+        }
+        if (headCommit.getParent() == null && headCommit.getSecondParent() == null) {
+            return ancestorsSet;
+        }
+
+        String parent = headCommit.getParent();
+        String secondParent = headCommit.getSecondParent();
+        if (parent != null) {
+            ancestorsSet.add(parent);
+            return ancestors(Commit.findCommit(parent), ancestorsSet);
+        }
+        if (secondParent != null) {
+            ancestorsSet.add(secondParent);
+            return ancestors(Commit.findCommit(secondParent), ancestorsSet);
+        }
+        return ancestorsSet;
+    }
+
+    public static void merge(String branch) {
+        if (!Add.isStageEmpty()) {
+            System.out.println("You have uncommitted changes.");
+            System.exit(0);
+        }
+        String currentHead = Commit.getHead();
+        String branchHead = getBranchHead(branch);
         if (branchHead == null) {
             System.out.println("A branch with that name does not exist.");
             System.exit(0);
@@ -27,55 +82,18 @@ public class Merge {
             System.out.println("Cannot merge a branch with itself.");
             System.exit(0);
         }
-        List<String> branchAncestors = ancestors(branchHead);
-        List<String> currentAncestors = ancestors(currentHead);
-        if (currentAncestors.contains(branchHead)) {
+        if (Objects.equals(splitPoint(branch), branchHead)) {
             System.out.println("Given branch is an ancestor of the current branch.");
             System.exit(0);
         }
-        if (branchAncestors.contains(currentHead)) {
+        if (Objects.equals(splitPoint(branch), currentHead)) {
             System.out.println("Current branch fast-forwarded.");
-            Checkout.checkoutBranch(branch);
-            System.exit(0);
-        }
-        // Find the latest common ancestors
-        int i = 0;
-        while (branchAncestors.get(i).equals(currentAncestors.get(i))) {
-            i++;
-        }
-        //System.out.println("split point: " + branchAncestors.get(i-1));
-        //System.out.println("branchAncestors:" + branchAncestors);
-        //System.out.println("currentAncestors:" + currentAncestors);
-        //System.out.println("i:" + i);
-        return branchAncestors.get(i - 1);
-    }
-
-    /**
-     * @param head the commit ID of head
-     * @return Return a list of ancestors of the given head in time sequence.
-     */
-    private static List<String> ancestors(String head) {
-        Commit headCommit = Commit.findCommit(head);
-        List<String> ancestors = new LinkedList<>();
-        while (headCommit.getParent() != null) {
-            ancestors.add(0, headCommit.getCommitId());
-            headCommit = Commit.findCommit(headCommit.getParent());
-        }
-        ancestors.add(0, headCommit.getCommitId());
-
-        return ancestors;
-    }
-
-    public static void merge(String branch) {
-        if (!Add.isStageEmpty()) {
-            System.out.println("You have uncommitted changes.");
             System.exit(0);
         }
         String splitPoint = splitPoint(branch);
         List<String> allFileNames = allFileNames(splitPoint, branch);
         String head = Commit.getHead();
         String currentBranch = Commit.getCurrentBranch();
-        String branchHead = getBranchHead(branch);
 
         boolean isConflict = false;
         //System.out.println("All files in this merge: " + allFileNames.toString());
