@@ -7,18 +7,11 @@ import java.util.*;
 public class Merge {
     
     private static String getBranchHead(String branch) {
-        String currentHead = Commit.getHead();
-        String currentBranch = Commit.getCurrentBranch();
         File branchHeadFile = Utils.join(Repository.BRANCHES_FOLDER, branch);
         if (!branchHeadFile.exists()) {
             return null;
         }
         return Utils.readContentsAsString(branchHeadFile);
-        if (!branchHeadFile.exists()) {
-
-        }
-
-
     }
     
     /** Return the ID of the split point of the current branch and the given branch.
