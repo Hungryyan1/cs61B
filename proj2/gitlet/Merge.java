@@ -185,18 +185,14 @@ public class Merge {
     private static void dealWithConflict(String fileName, String branchID, String headID) {
         String contentInHead = readContentsAsString(fileName, headID);
         String contentConcatenated = "<<<<<<< HEAD" + "\n";
-        if (contentInHead == null) {
-            contentConcatenated += "\n";
-        } else {
+        if (contentInHead != null) {
             contentConcatenated += contentInHead.trim() + "\n";
         }
         contentConcatenated += "=======" + "\n";
         String contentInBranch = readContentsAsString(fileName, branchID);
-        if (contentInBranch == null) {
-            contentConcatenated += "\n";
-        } else {
+        if (contentInBranch != null) {
             contentConcatenated += contentInBranch.trim() + "\n";
-        }
+        } 
         contentConcatenated += ">>>>>>>";
         File fileInCWD = Utils.join(Repository.CWD, fileName);
         if (fileInCWD.exists()) {
