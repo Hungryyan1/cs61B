@@ -37,7 +37,11 @@ public class Merge {
                 }
             }
         }
-        return commonAncestors.first();
+        String commonAncestor = "";
+        for (String k : commonAncestors) {
+            commonAncestor = k;
+        }
+        return commonAncestor;
     }
 
     private static boolean firstIsAncestorOfSecond(String first, String second) {
