@@ -59,6 +59,8 @@ public class Merge {
         }
         if (headCommit == null) {
             return ancestorsSet;
+        } else {
+            ancestorsSet.add(headCommit.getCommitId());
         }
         if (headCommit.getParent() == null && headCommit.getSecondParent() == null) {
             return ancestorsSet;
