@@ -27,10 +27,17 @@ public class Merge {
         
         // Now the branch ancestors represent the common ancestors
         branchAncestors.retainAll(currentAncestors);
+
+        TreeSet<String> commonAncestors = new TreeSet<>();
+        commonAncestors.addAll(branchAncestors);
         for (String commonAncestor : branchAncestors) {
-            branchAncestors.removeIf(otherAncestor -> !commonAncestor.equals(otherAncestor) && firstIsAncestorOfSecond(otherAncestor, commonAncestor));
+            for (String otherAncestor : branchAncestors) {
+                if (!commonAncestor.equals(otherAncestor) && firstIsAncestorOfSecond(commonAncestor, otherAncestor)) {
+                    commonAncestors.remove(commonAncestor);
+                }
+            }
         }
-        return branchAncestors.first();
+        return commonAncestors.first();
     }
 
     private static boolean firstIsAncestorOfSecond(String first, String second) {
