@@ -46,6 +46,9 @@ public class Merge {
         if (ancestorsSet == null) {
             ancestorsSet = new TreeSet<>();
         }
+        if (headCommit == null) {
+            return ancestorsSet;
+        }
         if (headCommit.getParent() == null && headCommit.getSecondParent() == null) {
             return ancestorsSet;
         }
