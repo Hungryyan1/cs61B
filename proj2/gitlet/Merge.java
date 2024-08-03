@@ -28,11 +28,7 @@ public class Merge {
         // Now the branch ancestors represent the common ancestors
         branchAncestors.retainAll(currentAncestors);
         for (String commonAncestor : branchAncestors) {
-            for (String otherAncestor : currentAncestors) {
-                if (!commonAncestor.equals(otherAncestor) && firstIsAncestorOfSecond(otherAncestor, commonAncestor)) {
-                    branchAncestors.remove(otherAncestor);
-                }
-            }
+            branchAncestors.removeIf(otherAncestor -> !commonAncestor.equals(otherAncestor) && firstIsAncestorOfSecond(otherAncestor, commonAncestor));
         }
         return branchAncestors.first();
     }
