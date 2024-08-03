@@ -102,6 +102,7 @@ public class Merge {
         }
         if (splitPoint.equals(currentHead)) {
             System.out.println("Current branch fast-forwarded.");
+            Checkout.checkoutBranch(branch);
             System.exit(0);
         }
         List<String> allFileNames = allFileNames(splitPoint, branch);
