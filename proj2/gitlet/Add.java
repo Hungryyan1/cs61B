@@ -41,7 +41,7 @@ public class Add  {
     }
 
     /** Copy the file to the staging area for addition if it is not staged.
-     *  If*/
+     * */
     public static void copyFileToStage(String fileName) {
         File fileToStage = Utils.join(Repository.CWD, fileName);
         if (!isStaged(fileToStage)) {

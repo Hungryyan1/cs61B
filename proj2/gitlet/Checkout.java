@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ *  Containing methods related to checkout-command.
+ */
+
+
 public class Checkout {
     /**
      * Takes the version of the file as it exists
@@ -82,7 +87,6 @@ public class Checkout {
             System.out.println("No such branch exists.");
             System.exit(0);
         }
-        String head = Commit.getHead();
         if (branchName.equals(Commit.getCurrentBranch())) {
             System.out.println("No need to checkout the current branch.");
             System.exit(0);

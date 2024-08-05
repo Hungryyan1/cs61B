@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
+/**
+ * Return specific date of given format.
+ */
+
 public class GetDate {
     public static String getDate() {
         // 创建一个Date对象表示当前时间

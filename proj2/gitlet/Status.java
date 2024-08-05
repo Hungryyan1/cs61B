@@ -43,9 +43,11 @@ public class Status {
 
     public static void printModification() {
         System.out.println("===" + " " + "Modifications Not Staged For Commit" + " " + "===");
+        // not required for the project
     }
 
     public static void printUntracked() {
         System.out.println("===" + " " + "Untracked Files" + " " + "===");
+        // not required for the project
     }
 }

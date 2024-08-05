@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The methods deal with branch, including create a new branch,
+ * check if a branch exists and remove an exist branch.
+ */
+
 public class Branch {
     /** Creates a new branch with the given name,
      * and points it at the current head commit. */

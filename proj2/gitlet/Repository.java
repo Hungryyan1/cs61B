@@ -7,22 +7,13 @@ import java.util.TreeMap;
 
 import static gitlet.Utils.*;
 
-// TODO: any imports you need here
 
 /** Represents a gitlet repository.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
- *
- *  @author TODO
+ *  Integrate the methods from other classes for the use of Main class.
+ *  Store many file variables.
+ *  @author Hungry
  */
 public class Repository {
-    /**
-     * TODO: add instance variables here.
-     *
-     * List all instance variables of the Repository class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided two examples for you.
-     */
 
     /** The current working directory. */
     public static final File CWD = new File(System.getProperty("user.dir"));
@@ -40,7 +31,6 @@ public class Repository {
     public static final File STAGING_REMOVAL_FOLDER = Utils.join(STAGING_FOLDER, "removal");
 
     public static final File BRANCHES_FOLDER = Utils.join(HEADS_FOLDER, "branches");
-    /* TODO: fill in the rest of this class. */
 
 
     public static void createObjectFolder() {
@@ -96,7 +86,6 @@ public class Repository {
         // (see gitlet rm), if it was at the time of the command.
         if (Remove.isStagedForRemoval(fileName)){
             Add.removeRemovalFromStage(fileName);
-            //Checkout.checkoutFile(fileName);
         }
 
         if (!fileToStage.exists()) {

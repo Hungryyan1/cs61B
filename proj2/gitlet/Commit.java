@@ -1,9 +1,7 @@
 package gitlet;
 
-// TODO: any imports you need here
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -16,7 +14,6 @@ import java.util.TreeMap;
  *  of file so that we can use the hash ref to find them.
  *  Need a file to store our commits(hash).(Maybe Link list)
  *  Write and read the list object.
- *
  *  Usage:
  *  new commit(,,,), createObjectFolder, createHeadsFolder
  *  makeHead(), writeCommit()
@@ -37,7 +34,6 @@ public class Commit implements Serializable {
     /** SHA-1 Hash for the current commit */
     private String commitId;
     /** Record the current branch the commit at */
-    /* TODO: fill in the rest of this class. */
 
 
     public String getMessage() {
@@ -110,8 +106,8 @@ public class Commit implements Serializable {
 
     /** make a branch head with the given name, store it in the Branches folder
      * file name is the branch name, content is the commit ID */
-    public void makeBranchHead(String BranchName) {
-        File branchFile = Utils.join(Repository.BRANCHES_FOLDER, BranchName);
+    public void makeBranchHead(String branchName) {
+        File branchFile = Utils.join(Repository.BRANCHES_FOLDER, branchName);
         if (branchFile.exists()) {
             branchFile.delete();
         }

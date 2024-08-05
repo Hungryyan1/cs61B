@@ -3,6 +3,7 @@ package gitlet;
 import java.io.IOException;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
+ *  Mainly calls methods from .Repository
  *  @author Hungry
  */
 public class Main {
@@ -11,7 +12,6 @@ public class Main {
      *  <COMMAND> <OPERAND1> <OPERAND2> ... 
      */
     public static void main(String[] args) {
-        // TODO: what if args is empty?
         if (args.length == 0) {
             System.out.println("Please enter a command.");
             System.exit(0);
@@ -23,13 +23,11 @@ public class Main {
                 Repository.init();
                 break;
             case "add":
-                // TODO: handle the `add [filename]` command
                 checkGitlet();
                 validateNumArgs(args, 2);
                 String fileName = args[1];
                 Repository.add(fileName);
                 break;
-            // TODO: FILL THE REST IN
             case "commit":
                 checkGitlet();
                 if (args.length == 1 || args[1].isBlank()) {

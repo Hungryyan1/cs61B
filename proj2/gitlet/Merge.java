@@ -4,6 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ *  Dealing with merge command.
+ *  Finding the split point (latest common ancestors use traversal by recursion).
+ *  The commit tree develops into a directed graph because of second parent.
+ *  There are many merge cases.
+ */
+
+
 public class Merge {
     
     private static String getBranchHead(String branch) {
@@ -15,7 +23,7 @@ public class Merge {
     }
     
     /** Return the ID of the split point of the current branch and the given branch.
-     * The split point is a latest common ancestor of the current and given branch heads.*/
+     * The split point is the latest common ancestor of the current and given branch heads.*/
     private static String splitPoint(String branch) {
         String currentHead = Commit.getHead();
         String branchHead = getBranchHead(branch);
